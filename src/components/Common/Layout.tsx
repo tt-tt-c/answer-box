@@ -10,6 +10,7 @@ export const Layout: React.FC = ({ children }) => {
       <GlobalStyle />
       <Wrapper>
         {children}
+        <small>&copy;2021 tt-tt-c</small>
       </Wrapper>
     </>
   );
