@@ -47,7 +47,7 @@ const TopPage = () => {
 };
 
 const Wrapper = styled.section`
-    padding: 50px calc(50% - 540px);
+    padding: 50px calc(50% - 540px) 100px;
     text-align: center;
 `;
 

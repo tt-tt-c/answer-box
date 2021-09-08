@@ -10,7 +10,7 @@ export const Layout: React.FC = ({ children }) => {
       <GlobalStyle />
       <Wrapper>
         {children}
-        <small>&copy;2021 tt-tt-c</small>
+        <Copyright><small>&copy;2021 tt-tt-c</small></Copyright>
       </Wrapper>
     </>
   );
@@ -37,4 +37,12 @@ const Wrapper = styled.div`
   width: 100%;
   background: url(${bg_01});
   color: #FFF;
+`;
+
+const Copyright = styled.p`
+  font-size: 14px;
+  line-height: 4;
+  text-align: center;
+  color: #000;
+  background-color: #FFF;
 `;
