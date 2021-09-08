@@ -1,9 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
+import { Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
+// import { Provider } from "react-redux";
+// import {configureStore} from "./reducks/store";
+import Route from "./Route";
 
+const history = createBrowserHistory();
 
 ReactDOM.render(
-  <React.StrictMode>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <>
+        <Router history={history}>
+            <Route />
+        </Router>
+    </>,
+    document.getElementById("root")
 );

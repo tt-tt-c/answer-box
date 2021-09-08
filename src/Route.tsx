@@ -1,21 +1,23 @@
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route as ReactRoute, Redirect } from "react-router-dom";
+import { Layout } from "./components/Common";
+import { TopPage } from "./templates";
 
 export const Path = {
     top: "/",
+    stage1: "/stage/1/",
 };
 
-const RouteContainer: React.FC = () => {
-    const empComp = () => {return (<></>)}
-    return(
-        (
-            <>
+const Route: React.FC = () => {
+    return (
+        <>
+            <Layout>
                 <Switch>
-                    <Route exact path={Path.top} component={empComp} />
+                    <ReactRoute exact path={Path.top} component={TopPage} />
                     <Redirect to={Path.top} />
                 </Switch>
-            </>
-        )
-    )
-} 
+            </Layout>
+        </>
+    );
+};
 
-export default RouteContainer;
+export default Route;
