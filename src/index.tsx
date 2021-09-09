@@ -3,9 +3,9 @@ import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 // import { Provider } from "react-redux";
 // import {configureStore} from "./reducks/store";
-import Route from "./Route";
+import Route from "./components/Common/Route";
 
-const history = createBrowserHistory();
+export const history = createBrowserHistory();
 
 ReactDOM.render(
     <>
