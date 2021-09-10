@@ -1,18 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 type Props = {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (isChecked: boolean) => void;
+    readonly isChecked?: boolean;
 };
 
-const Toggle: React.FC<Props> = ({ onChange }) => {
-    const [isChecked, setIsCheked] = useState(false)
+const Toggle: React.FC<Props> = ({ onChange, isChecked = false }) => {
+    const [checked, setChecked] = useState(isChecked);
+
+    useEffect(() => {
+        onChange(checked);
+    }, [checked]);
+
     return (
-        <Wrapper onClick={()=> setIsCheked(!isChecked)}>
-            <input type="checkbox" checked={isChecked} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)} />
-            <label onClick={()=> setIsCheked(!isChecked)}><span></span></label>
-            <span onClick={()=> setIsCheked(!isChecked)} ></span>
-        </Wrapper>
+        <>
+            <Wrapper onClick={() => setChecked(!checked)}>
+                <input type="checkbox" checked={checked} />
+                <label onClick={() => setChecked(!checked)}>
+                    <span></span>
+                </label>
+                <span onClick={() => setChecked(!checked)}></span>
+            </Wrapper>
+        </>
     );
 };
 
@@ -25,7 +35,8 @@ const Wrapper = styled.div`
     position: relative;
     margin: 0;
     width: 150px;
-    background: rgba(0,0,0,0);
+    background: rgba(0, 0, 0, 0);
+    font-weight: 700;
     input {
         display: none;
     }
@@ -51,7 +62,7 @@ const Wrapper = styled.div`
         padding: 0 36px 0 0;
         color: #78bd78;
     }
-    >span {
+    > span {
         display: block;
         position: absolute;
         width: 52px;

@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { icon_04 } from "../../assets/img";
 import { Link01 } from "../Common";
@@ -9,15 +10,19 @@ type Props = {
 };
 
 const DrawerMenu: React.FC<Props> = ({ closeFunc }) => {
+    const {stageId} = useParams<{stageId: string}>();
+
     return (
         <Wrapper>
             <CloseButton type={"button"} onClick={() => closeFunc()} />
             <LinkWrapper>
-                <li><Link01 to={path2.storage} style={LinkStyle}>ものおき</Link01></li>
-                <li><Link01 to={`${path2.smallRoom}/A`} style={LinkStyle}>RoomA</Link01></li>
-                <li><Link01 to={`${path2.smallRoom}/B`} style={LinkStyle}>RoomB</Link01></li>
+                <li><Link01 to={path2.storage} style={LinkStyle}>ものおき</Link01></li>                
                 <li><Link01 to={path2.answerBox} style={LinkStyle}>アンサーボックス</Link01></li>
                 <li><Link01 to={path2.mysterySlide} style={LinkStyle}>謎解き</Link01></li>
+                <li><Link01 to={path2.roomA} style={LinkStyle}>Room-A</Link01></li>
+                <li><Link01 to={path2.roomB} style={LinkStyle}>Room-B</Link01></li>
+                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomO} style={LinkStyle}>Room-O</Link01></li>)}
+                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomX} style={LinkStyle}>Room-X</Link01></li>)}
             </LinkWrapper>
         </Wrapper>
     );

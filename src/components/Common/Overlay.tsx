@@ -2,11 +2,16 @@ import React from "react";
 import styled from "styled-components";
 
 type Props = {
-    style: {
+    style?: {
         [key: string]: string;
     };
     onClick?: Function;
     isShowned?: boolean;
+};
+
+const OverlayStyle = {
+    background: "rgba(0,0,0,0.4)",
+    zIndex: "9990",
 };
 
 /**
@@ -14,7 +19,7 @@ type Props = {
  *Styleでbackground, z-index等の指定が必要
  *
  */
-const Overlay: React.FC<Props> = ({ style, onClick, isShowned = true }) => {
+const Overlay: React.FC<Props> = ({ style=OverlayStyle, onClick, isShowned = true, children }) => {
     return (
         <>
             {isShowned && (
@@ -23,7 +28,9 @@ const Overlay: React.FC<Props> = ({ style, onClick, isShowned = true }) => {
                     onClick={() => {
                         if (onClick !== undefined) onClick();
                     }}
-                ></Wrapper>
+                >
+                    {children}
+                </Wrapper>
             )}
         </>
     );
