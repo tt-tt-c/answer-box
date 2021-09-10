@@ -2,6 +2,8 @@ import { Switch, Route as ReactRoute, Redirect } from "react-router-dom";
 import { Layout } from ".";
 import { TopPage, StagePage } from "../../templates";
 
+export type StageNum = "1" | "2" | "3" | "4" | "5";
+
 export const path = {
     top: "/",
     stage: "/stage",
@@ -14,9 +16,12 @@ export const path = {
 
 export const path2 = {
     storage: "storage",
-    smallRoom: `small-room`,
     mysterySlide: `mystery-slide`,
     answerBox: `answer-box`,
+    roomA: `room-A`,
+    roomB: `room-B`,
+    roomO: `room-O`,
+    roomX: `room-X`,
 };
 
 const Route: React.FC = () => {
@@ -27,22 +32,37 @@ const Route: React.FC = () => {
                     <ReactRoute exact path={path.top} component={TopPage} />
                     <ReactRoute
                         exact
-                        path={`${path.stage}/:stageId([1-5])/${path2.storage}`}
+                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.storage})`}
+                        component={StagePage}
+                    />                    
+                    <ReactRoute
+                        exact
+                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.mysterySlide})`}
                         component={StagePage}
                     />
                     <ReactRoute
                         exact
-                        path={`${path.stage}/:stageId([1-5])/${path2.smallRoom}`}
+                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.answerBox})`}
+                        component={StagePage}
+                    />                    
+                    <ReactRoute
+                        exact
+                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.roomA})`}
                         component={StagePage}
                     />
                     <ReactRoute
                         exact
-                        path={`${path.stage}/:stageId([1-5])/${path2.mysterySlide}`}
+                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.roomB})`}
                         component={StagePage}
                     />
                     <ReactRoute
                         exact
-                        path={`${path.stage}/:stageId([1-5])/${path2.answerBox}`}
+                        path={`${path.stage}/:stageId([3-5])/:pathId(${path2.roomO})`}
+                        component={StagePage}
+                    />
+                    <ReactRoute
+                        exact
+                        path={`${path.stage}/:stageId([3-5])/${path2.roomX}`}
                         component={StagePage}
                     />
                     <ReactRoute

@@ -1,17 +1,20 @@
 import ReactDOM from "react-dom";
 import { Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
-// import { Provider } from "react-redux";
-// import {configureStore} from "./reducks/store";
+import { Provider } from "react-redux";
+import { configureStore, history } from "./reducks/store/store";
 import Route from "./components/Common/Route";
+import { Loading } from "./components/Common";
 
-export const history = createBrowserHistory();
+const store = configureStore()
 
 ReactDOM.render(
     <>
-        <Router history={history}>
-            <Route />
-        </Router>
+        <Provider store={store}>
+            <Router history={history}>
+                <Loading></Loading>
+                <Route />
+            </Router>
+        </Provider>
     </>,
     document.getElementById("root")
 );

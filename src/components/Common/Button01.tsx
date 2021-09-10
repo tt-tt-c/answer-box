@@ -8,6 +8,7 @@ type Props = {
     style?: {
         [k in string]: string;
     };
+    isDisabled?: boolean;
 };
 
 const Button01: React.FC<Props> = ({
@@ -15,14 +16,17 @@ const Button01: React.FC<Props> = ({
     boxShadowColor,
     buttonColor,
     onClick,
+    isDisabled = false,
     children,
 }) => {
     return (
         <Wrapper
             boxShadowColor={boxShadowColor}
             buttonColor={buttonColor}
+            isDisabled={isDisabled}
             style={style}
             onClick={() => onClick()}
+            disabled={isDisabled}
         >
             {children}
         </Wrapper>
@@ -31,8 +35,15 @@ const Button01: React.FC<Props> = ({
 
 export default Button01;
 
-const Wrapper = styled.button<{ boxShadowColor: string; buttonColor: string }>`
-    cursor: pointer;
+const Wrapper = styled.button<{
+    boxShadowColor: string;
+    buttonColor: string;
+    isDisabled: boolean;
+}>`
+    cursor: ${({ isDisabled }) => (isDisabled ? `inherit` : "pointer")};
+    opacity: ${({ isDisabled }) => (isDisabled ? `0.5` : "1")};
+    -webkit-box-shadow: ${({ boxShadowColor }) =>
+        boxShadowColor ? `0 5px 0 ${boxShadowColor}` : "inherit"};
     font-size: 1.2rem;
     font-weight: 700;
     line-height: 1.5;
@@ -49,7 +60,7 @@ const Wrapper = styled.button<{ boxShadowColor: string; buttonColor: string }>`
         boxShadowColor ? `0 5px 0 ${boxShadowColor}` : "inherit"};
     box-shadow: ${({ boxShadowColor }) =>
         boxShadowColor ? `0 5px 0 ${boxShadowColor}` : "inherit"};
-
+    
     :active {
         -webkit-transform: translate(0, 3px);
         transform: translate(0, 3px);
