@@ -8,6 +8,7 @@ type Props = {
     noText?: string;
     doFunc: Function;
     closeFunc: Function;
+    isOverlayClickable?: boolean;
 };
 
 export type ConfirmState = Props & { isShowned: boolean };
@@ -18,11 +19,15 @@ const ConfirmModal: React.FC<Props> = ({
     noText = "NO",
     doFunc,
     closeFunc,
+    isOverlayClickable = false,
 }) => {
     return (
-        <Overlay>
-            <ConfirmWrapper>                
-
+        <Overlay
+            onClick={() => {
+                if (isOverlayClickable) closeFunc();
+            }}
+        >
+            <ConfirmWrapper>
                 <ConfirmText>{confirmText}</ConfirmText>
                 <SelectButtons>
                     <li>

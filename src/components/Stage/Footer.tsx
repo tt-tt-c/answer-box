@@ -2,24 +2,28 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { ConfirmState } from "../Common/ConfirmModal";
 import { Button01, ConfirmModal, Toggle } from "../Common";
-import { useSelctor } from "../../reducks/store/store";
+import { useSelector } from "../../reducks/store/store";
 import {
     getIsSelectMode,
-    getSelectedThing,
-} from "../../reducks/user/selectors";
+    getSelectedItem,
+} from "../../reducks/store/selectors";
 import { useDispatch } from "react-redux";
-import { userActions } from "../../reducks/user/actions";
+import { useParams } from "react-router";
+import { stageActions } from "../../reducks/store/actions";
+import { StageNum } from "../Common/Route";
+import { loadingActions } from "../../reducks/loading/actions";
 
 const Footer = () => {
-    const selector = useSelctor();
-    const isSelectMode = getIsSelectMode(selector.user);
-    const selectedThing = getSelectedThing(selector.user);
+    const selector = useSelector();
+    const { stageId } = useParams<{ stageId: StageNum }>();
+    const isSelectMode = getIsSelectMode(stageId, selector);
+    const selectedItem = getSelectedItem(stageId, selector);
     const dispatch = useDispatch();
     const initConfirmState = {
         isShowned: false,
         confirmText: "",
-        doFunc: () => console.log("do"),
-        closeFunc: () => console.log("close"),
+        doFunc: () => {},
+        closeFunc: () => {},
     };
     const [confirmModalState, setConfirmModalState] =
         useState<ConfirmState>(initConfirmState);
@@ -32,10 +36,11 @@ const Footer = () => {
                         <li>
                             <MenuTitle>選択中のモノ</MenuTitle>
                             <SelectedThingWrapper>
-                                {selectedThing && (
+                                {selectedItem && (
                                     <SelectedThingImg
-                                        src={selectedThing.img}
-                                        alt={selectedThing.name}
+                                        key={`selectedItem${selectedItem.id}`}
+                                        src={selectedItem.img}
+                                        alt={selectedItem.name}
                                     />
                                 )}
                             </SelectedThingWrapper>
@@ -52,12 +57,19 @@ const Footer = () => {
                                             confirmText:
                                                 "選択中の物をリリースしますか？",
                                             doFunc: () => {
+                                                dispatch(loadingActions.showLoading())
                                                 setConfirmModalState(
                                                     initConfirmState
-                                                );
+                                                );                                        
                                                 dispatch(
-                                                    userActions.releaseSelectedThing()
+                                                    stageActions[
+                                                        stageId
+                                                    ].releaseSelectedItem()
                                                 );
+                                                dispatch(stageActions[
+                                                    stageId
+                                                ].updateSeleteMode(false))
+                                                dispatch(loadingActions.hideLoading())
                                             },
                                             closeFunc: () => {
                                                 setConfirmModalState(
@@ -66,9 +78,10 @@ const Footer = () => {
                                             },
                                             yesText: "リリースする",
                                             noText: "キャンセル",
+                                            isOverlayClickable: true,
                                         });
                                     }}
-                                    isDisabled={selectedThing === null}
+                                    isDisabled={selectedItem === null}
                                 >
                                     RELEASE
                                 </Button01>
@@ -80,19 +93,20 @@ const Footer = () => {
                                 <Toggle
                                     onChange={(isChecked: boolean) => {
                                         dispatch(
-                                            userActions.updateSeleteMode(
-                                                isChecked
-                                            )
+                                            stageActions[
+                                                stageId
+                                            ].updateSeleteMode(isChecked)
                                         );
                                     }}
                                     isChecked={isSelectMode}
+                                    isDisabled={selectedItem !== null}
                                 ></Toggle>
                             </Container>
                         </li>
                     </MenuWrapper>
                 </footer>
             </Wrapper>
-            {confirmModalState.isShowned &&  (
+            {confirmModalState.isShowned && (
                 <ConfirmModal {...confirmModalState} />
             )}
         </>

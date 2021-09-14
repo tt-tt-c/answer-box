@@ -18,3 +18,5 @@ ReactDOM.render(
     </>,
     document.getElementById("root")
 );
+
+export type AppDispatch = typeof store.dispatch;

@@ -3,14 +3,14 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { icon_04 } from "../../assets/img";
 import { Link01 } from "../Common";
-import { path2 } from "../Common/Route";
+import { path2, StageNum } from "../Common/Route";
 
 type Props = {
     closeFunc: Function;
 };
 
 const DrawerMenu: React.FC<Props> = ({ closeFunc }) => {
-    const {stageId} = useParams<{stageId: string}>();
+    const {stageId} = useParams<{stageId: StageNum}>();
 
     return (
         <Wrapper>
@@ -19,8 +19,8 @@ const DrawerMenu: React.FC<Props> = ({ closeFunc }) => {
                 <li><Link01 to={path2.storage} style={LinkStyle}>ものおき</Link01></li>                
                 <li><Link01 to={path2.answerBox} style={LinkStyle}>アンサーボックス</Link01></li>
                 <li><Link01 to={path2.mysterySlide} style={LinkStyle}>謎解き</Link01></li>
-                <li><Link01 to={path2.roomA} style={LinkStyle}>Room-A</Link01></li>
-                <li><Link01 to={path2.roomB} style={LinkStyle}>Room-B</Link01></li>
+                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomA} style={LinkStyle}>Room-A</Link01></li>)}
+                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomB} style={LinkStyle}>Room-B</Link01></li>)}
                 {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomO} style={LinkStyle}>Room-O</Link01></li>)}
                 {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomX} style={LinkStyle}>Room-X</Link01></li>)}
             </LinkWrapper>
@@ -65,12 +65,11 @@ const LinkWrapper = styled.ul`
     height: 100%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-around;
 `;
 
 const LinkStyle = {
     textAlign: "center",
-    margin: "0 auto",
+    margin: "0 auto 15px",
     width: "100%",
     padding: "1.5rem 0",
     border: "1px solid #fff",
