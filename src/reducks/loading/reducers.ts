@@ -15,6 +15,6 @@ export const loadingReducer = reducerWithInitialState(initialState.loading)
             isShowned: false,
         };
     })
-    .default(() => {
-        return { ...initialState.loading };
+    .default((state) => {
+        return { ...state };
     });

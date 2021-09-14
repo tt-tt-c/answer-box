@@ -15,6 +15,24 @@ export const stage2Reducer = reducerWithInitialState(initialState.stage2)
             problemNum: problemNum,
         };
     })
-    .default(() => {
-        return { ...initialState.stage1 };
+    .case(stage2Actions.releaseSelectedItem, (state) => {
+        return {
+            ...state,
+            selectedItem: null,
+        };
+    })
+    .case(stage2Actions.updateSelectedItem, (state, selectedItem) => {
+        return {
+            ...state,
+            selectedItem: {...selectedItem},
+        };
+    })
+    .case(stage2Actions.updateSeleteMode, (state, isSelectMode) => {
+        return {
+            ...state,
+            isSelectMode: isSelectMode,
+        }
+    })
+    .default((state) => {
+        return { ...state };
     });

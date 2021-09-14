@@ -13,7 +13,7 @@ const GameLayout: React.FC = ({ children }) => {
 
 const MainWrapper = styled.main`
     margin: 90px 0 180px;
-    padding: 50px calc(50% - 540px) 50px;
+    padding: 10px calc(50% - 540px) 50px;
 `;
 
 export default GameLayout;

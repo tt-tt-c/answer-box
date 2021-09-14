@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { Overlay } from ".";
 import { getIsShownedLoading } from "../../reducks/loading/selectors";
-import { useSelctor } from "../../reducks/store/store";
+import { useSelector } from "../../reducks/store/store";
 
 const Loading: React.FC = () => {
-    const selector = useSelctor();
+    const selector = useSelector();
     const isShowned = getIsShownedLoading(selector.loading);
 
     return (

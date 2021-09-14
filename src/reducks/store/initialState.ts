@@ -6,14 +6,15 @@ export const initialState: Omit<AppState, "router"> = {
     },
     stage1: {
         isCleared: false,
-        problemNum: 1,
+        problemNum: 0,
+        isSelectMode: false,
+        selectedItem: null,
+        storageItems: [],
     },
     stage2: {
         isCleared: false,
         problemNum: 1,
-    },
-    user: {
-        selectedThing: null,
         isSelectMode: false,
+        selectedItem: null,
     },
 };

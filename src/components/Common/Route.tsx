@@ -69,7 +69,7 @@ const Route: React.FC = () => {
                         path={`${path.stage}/:stageId([1-5])`}
                         render={({ match }) => (
                             <Redirect
-                                to={`${path.stage}/${match.params.stageId}/${path2.answerBox}`}
+                                to={`${path.stage}/${match.params.stageId}/${path2.mysterySlide}`}
                             />
                         )}
                     />
