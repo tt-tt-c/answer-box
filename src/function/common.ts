@@ -14,6 +14,7 @@ export const getItems = async (
     processNum: number,
     placeId?: number
 ) => {
+    console.log(placeId, problemNum, processNum, stageId)
     const path = `${
         paths.items
     }/${stageId}?problemNum=${problemNum}&processNum=${processNum}${
@@ -28,7 +29,7 @@ export const getItems = async (
         const bytes = new Uint8Array(images[i].data);
         blobs[i] = new Blob([bytes], { type: "image/png" });
         blobUrls[i] = URL.createObjectURL(blobs[i]);
-    }
+    } 
     return { items: items, imageUrls: blobUrls, inBoxItemId: inBoxItemId, boxAId: boxAId, egaoId: egaoId };
 };
 
@@ -69,46 +70,34 @@ export const sendItem = async (
 export const answerByItem = async (
     stageId: number,
     itemId: number,
-    problemNum: number,
-    processNum: number,
-    placeId?: number
+    problemNum: number,    
+    placeId: number
 ) => {
     const path = `${
         paths.answer
-    }/${stageId}?itemId=${itemId}&problemNum=${problemNum}&processNum=${processNum}&${
-        !placeId ? `` : `placeId=${placeId}`
-    }`;
+    }/${stageId}?itemId=${itemId}&problemNum=${problemNum}&placeId=${placeId}`;
     const fetchData = await fetch(path, { mode: "cors" });
     const json = await fetchData.json();
 
-    const { isCleared, isCorrect, mysterySlide } = json;
-    let blob;
-    let blobUrl;
-    if (isCorrect && mysterySlide) {
-        const bytes = new Uint8Array(mysterySlide.data);
-        blob = new Blob([bytes], { type: "image/jpg" });
-        blobUrl = URL.createObjectURL(blob);
-    }
+    const { isCleared, isCorrect } = json;
 
     return {
         isCleared: isCleared,
         isCorrect: isCorrect,
-        mysterySlide: blobUrl,
     };
 };
 
-//fetchMysterySlide
-export const fetchMysterySlide = async (stageId: number) => {
-    const path = `${paths.mysterySlide}/${stageId}`;
+export const fetchMysterySlide = async (stageId: number, problemNum: number) => {
+    const path = `${paths.mysterySlide}/${stageId}?problemNum=${problemNum}`;
     const fetchData = await fetch(path, { mode: "cors" });
     const json = await fetchData.json();
 
-    const { mysterySlide } = json;
+    const { mysterySlide } = json;    
     let blob;
-    let blobUrl;
+    let blobUrl = null;
     if (mysterySlide) {
         const bytes = new Uint8Array(mysterySlide.data);
-        blob = new Blob([bytes], { type: "image/jpg" });
+        blob = new Blob([bytes], { type: "image/jpeg" });
         blobUrl = URL.createObjectURL(blob);
     } else {
         alert("読み込みに失敗しました");

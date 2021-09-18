@@ -21,8 +21,8 @@ const DrawerMenu: React.FC<Props> = ({ closeFunc }) => {
                 <li><Link01 to={path2.mysterySlide} style={LinkStyle} onClick={closeFunc}>謎解き</Link01></li>
                 {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomA} style={LinkStyle} onClick={closeFunc}>Room-A</Link01></li>)}
                 {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomB} style={LinkStyle} onClick={closeFunc}>Room-B</Link01></li>)}
-                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomO} style={LinkStyle} onClick={closeFunc}>Room-O</Link01></li>)}
-                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomX} style={LinkStyle} onClick={closeFunc}>Room-X</Link01></li>)}
+                {stageId && !/[1-3]/.test(stageId) && (<li><Link01 to={path2.roomO} style={LinkStyle} onClick={closeFunc}>Room-O</Link01></li>)}
+                {stageId && !/[1-3]/.test(stageId) && (<li><Link01 to={path2.roomX} style={LinkStyle} onClick={closeFunc}>Room-X</Link01></li>)}
             </LinkWrapper>
         </Wrapper>
     );

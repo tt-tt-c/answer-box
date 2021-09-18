@@ -8,10 +8,11 @@ import {
 import { loadingActions } from "../loading/actions";
 import { modalsActions } from "../modals/actions";
 import { AppState } from "../store/store";
-import { stage1Actions } from "./actions";
+import { stage3Actions } from "./actions";
 import {
     getInTransparentBoxItem,
     getProblemNum,
+    getProcessNum,
     getSelectedItem,
     getStorageItems,
 } from "./selectors";
@@ -21,14 +22,14 @@ export const fetchStorageItems = () => {
     return async (dispatch: AppDispatch, getState: () => AppState) => {
         const state = getState();
         dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(state.stage1);
+        const problemNum = getProblemNum(state.stage3);
 
         const { items, imageUrls, inBoxItemId, boxAId, egaoId } =
-            await getItems(1, problemNum, 1);
+            await getItems(3, problemNum, 1);
 
         const initItems: Array<ItemAlias> = [];
 
-        const initialInBoxItem = getInTransparentBoxItem(state.stage1);
+        const initialInBoxItem = getInTransparentBoxItem(state.stage3);
 
         let inBoxItem: ItemAlias | null = null;
 
@@ -58,24 +59,55 @@ export const fetchStorageItems = () => {
                 };
         }
 
-        dispatch(stage1Actions.updateStorageItems([...initItems]));
+        dispatch(stage3Actions.updateStorageItems([...initItems]));
         if (inBoxItem)
-            dispatch(stage1Actions.updateInTransparentBoxItem(inBoxItem));
+            dispatch(stage3Actions.updateInTransparentBoxItem(inBoxItem));
+        dispatch(loadingActions.hideLoading());
+    };
+};
+
+export const fetchSmallRoomItems = (placeId: 1|2|3|4) => {
+    return async (dispatch: AppDispatch, getState: () => AppState) => {
+        const state = getState();
+        dispatch(loadingActions.showLoading());
+        const problemNum = getProblemNum(state.stage3);
+        const processNum = getProcessNum(state.stage3);
+
+        const { items, imageUrls } =
+            await getItems(3, problemNum, processNum, placeId);
+
+        const initItems: Array<ItemAlias> = [];
+
+        for (let i = 0; i < items.length; i++) {
+
+                initItems.push({
+                    id: items[i].id.toString(),
+                    name: items[i].name,
+                    img: imageUrls[i],
+                    size: items[i].image_size,
+                });
+        }
+
+        let smallRoomItems = {...state.stage3.smallRoomItems}
+        smallRoomItems[placeId] = [...initItems]
+
+        dispatch(stage3Actions.updateSmallRoomItems({...smallRoomItems}));
+
         dispatch(loadingActions.hideLoading());
     };
 };
 
 export const sendItem = (placeId: 1 | 2 | 3 | 4) => {
     return async (dispatch: AppDispatch, getState: () => AppState) => {
-        const stage1State = getState().stage1;
+        const stage3State = getState().stage3;
         dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(stage1State);
-        const selectedItem = getSelectedItem(stage1State);
-        const storageItems = getStorageItems(stage1State);
+        const problemNum = getProblemNum(stage3State);
+        const selectedItem = getSelectedItem(stage3State);
+        const storageItems = getStorageItems(stage3State);
 
         if (selectedItem) {
             const { isCorrect, item, imageUrl } = await sendItemFunc(
-                1,
+                2,
                 Number(selectedItem.id),
                 problemNum,
                 1,
@@ -86,7 +118,7 @@ export const sendItem = (placeId: 1 | 2 | 3 | 4) => {
                     (storageItem) => storageItem.id !== item.id
                 );
                 dispatch(
-                    stage1Actions.updateStorageItems([...newStorageItems])
+                    stage3Actions.updateStorageItems([...newStorageItems])
                 );
                 //別の部屋のアイテムセット「3-5」
             } else {
@@ -102,16 +134,18 @@ export const sendItem = (placeId: 1 | 2 | 3 | 4) => {
 //answerByItem(モノで解答、正誤判定)
 export const answerByItem = (placeId: 1 | 2 | 3 | 4) => {
     return async (dispatch: AppDispatch, getState: () => AppState) => {
-        const stage1State = getState().stage1;
+        const stage3State = getState().stage3;
         dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(stage1State);
-        const selectedItem = getSelectedItem(stage1State);
-        const storageItems = getStorageItems(stage1State);
-        dispatch(stage1Actions.releaseSelectedItem());
+        const problemNum = getProblemNum(stage3State);
+        const selectedItem = getSelectedItem(stage3State);
+        const storageItems = getStorageItems(stage3State);
+        dispatch(stage3Actions.releaseSelectedItem());
+
+        console.log("stage3 answer")
 
         if (selectedItem) {
             const { isCorrect, isCleared } = await answerByItemFunc(
-                1,
+                2,
                 Number(selectedItem.id),
                 problemNum,
                 placeId
@@ -121,7 +155,7 @@ export const answerByItem = (placeId: 1 | 2 | 3 | 4) => {
                     (storageItem) => storageItem.id !== selectedItem.id
                 );
                 dispatch(
-                    stage1Actions.updateStorageItems([...newStorageItems])
+                    stage3Actions.updateStorageItems([...newStorageItems])
                 );
             } 
             if (isCleared) {
@@ -145,15 +179,15 @@ export const answerByItem = (placeId: 1 | 2 | 3 | 4) => {
 
 export const fetchMysterySlide = () => {
     return async (dispatch: AppDispatch, getState: () => AppState) => {
-        const stage1State = getState().stage1;
+        const stage3State = getState().stage3;
         dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(stage1State);
+        const problemNum = getProblemNum(stage3State);
 
-        const mysterySlide = await getMysterySlide(1, problemNum);        
+        const mysterySlide = await getMysterySlide(3, problemNum);        
 
         if (mysterySlide)
             dispatch(
-                stage1Actions.updateMysterySlide(mysterySlide.mysterySlide)
+                stage3Actions.updateMysterySlide(mysterySlide.mysterySlide)
             );
         dispatch(loadingActions.hideLoading());
     };

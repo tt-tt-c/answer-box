@@ -32,7 +32,7 @@ const Route: React.FC = () => {
                     <ReactRoute exact path={path.top} component={TopPage} />
 
                     <ReactRoute path={`${path.stage}/:stageId([1-5])`}>
-                        <StageAuth>
+                        {/* <StageAuth> */}
                             <ReactRoute
                                 exact
                                 path={`${path.stage}/:stageId([1-5])/:pathId(${path2.storage})`}
@@ -76,7 +76,7 @@ const Route: React.FC = () => {
                                     />
                                 )}
                             />
-                        </StageAuth>
+                        {/* </StageAuth> */}
                     </ReactRoute>
                     <Redirect to={path.top} />
                 </Switch>

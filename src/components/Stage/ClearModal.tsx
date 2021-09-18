@@ -6,7 +6,7 @@ import { modalsActions } from "../../reducks/modals/actions";
 import { getStageClearModalState } from "../../reducks/modals/selectors";
 import { useSelector } from "../../reducks/store/store";
 import { Overlay } from "../Common";
-import { path, path2, StageNum } from "../Common/Route";
+import { StageNum } from "../Common/Route";
 import {
     icon_01,
     icon_02,

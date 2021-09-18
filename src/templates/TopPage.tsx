@@ -3,8 +3,6 @@ import { path } from "../components/Common/Route";
 import { Subtitle, Title, DescText, Link01 } from "../components/Common";
 
 const TopPage = () => {
-    const test = localStorage.getItem("persist:root");
-    console.log(test); 
     return (
         <>
             <Wrapper>

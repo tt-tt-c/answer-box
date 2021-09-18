@@ -17,8 +17,6 @@ type Props = RouteComponentProps<{
 }>;
 
 const StagePage: React.FC<Props> = (props) => {
-    const test = localStorage.getItem("persist:root");
-    console.log(test); 
     const stageId = props.match.params.stageId;
     const pathId = props.match.params.pathId;
     const availableBox = allAvailable;
@@ -27,6 +25,11 @@ const StagePage: React.FC<Props> = (props) => {
         case "1":
             availableBox.o = false;
             availableBox.x = false;
+            break;
+        case "2":
+            availableBox.a = false;
+            availableBox.b = false;
+            break;
     }
     return (
         <>
@@ -44,15 +47,13 @@ const StagePage: React.FC<Props> = (props) => {
                     <SceneOfMysterySlide></SceneOfMysterySlide>
                 )}
                 {pathId === path2.storage && <SceneOfStorage></SceneOfStorage>}
-                {pathId !== path2.answerBox &&
-                    pathId !== path2.mysterySlide &&
-                    pathId !== path2.storage && (
-                        <SceneOfSmallRoom></SceneOfSmallRoom>
-                    )}
+                {pathId === path2.roomA && <SceneOfSmallRoom placeId={1}/>}
+                {pathId === path2.roomB && <SceneOfSmallRoom placeId={2}/>}
+                {pathId === path2.roomO && <SceneOfSmallRoom placeId={3}/>}
+                {pathId === path2.roomX && <SceneOfSmallRoom placeId={4}/>}
                 <ClearModal />
                 <RightOrWrongModal />
             </GameLayout>
-            
         </>
     );
 };

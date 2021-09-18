@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, combineReducers, compose } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import {
     connectRouter,
     routerMiddleware,
@@ -18,26 +18,22 @@ import { stage2Reducer } from "../stage2/reducers";
 import { Stage2Alias } from "../stage2/types";
 import { ModalsAlias } from "../modals/types";
 import { modalsReducer } from "../modals/reducers";
+import { Stage3Alias } from "../stage3/types";
+import { stage3Reducer } from "../stage3/reducers";
 
 export type AppState = {
     loading: LoadingAlias;
     modals: ModalsAlias;
     stage1: Stage1Alias;
     stage2: Stage2Alias;
+    stage3: Stage3Alias;
     router: RouterState;
 };
-
-interface ExtendedWindow extends Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-}
-declare var window: ExtendedWindow;
-
-const composeReduxDevToolsEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const persistConfig = {
     key: "root", // Storageに保存されるキー名を指定する
     storage, // 保存先としてlocalStorageがここで設定される
-    whitelist: ["stage1, stage2, stage3, stage4, stage5"], // Stateは`todos`のみStorageに保存する
+    whitelist: ["stage1", "stage2", "stage3", "stage4", "stage5", "router"], // Stateは`todos`のみStorageに保存する
     // blacklist: ['visibilityFilter'] // `visibilityFilter`は保存しない
 };
 
@@ -64,20 +60,50 @@ export function configureStore() {
             combineReducers({
                 loading: loadingReducer,
                 modals: modalsReducer,
-                stage1: persistReducer({
-                    key: "stage1",
-                    storage,
-                    blacklist: ['selectedItem', 'storageItems', 'inTransparentBoxItem']
-                },stage1Reducer),
-                stage2: persistReducer({
-                    key: "stage2",
-                    storage,
-                    blacklist: ['selectedItem', 'storageItems', 'inTransparentBoxItem']
-                },stage1Reducer),
+                stage1: persistReducer(
+                    {
+                        key: "stage1",
+                        storage,
+                        blacklist: [
+                            "selectedItem",
+                            "storageItems",
+                            "inTransparentBoxItem",
+                            "mysterySlide",
+                        ],
+                    },
+                    stage1Reducer
+                ),
+                stage2: persistReducer(
+                    {
+                        key: "stage2",
+                        storage,
+                        blacklist: [
+                            "selectedItem",
+                            "storageItems",
+                            "inTransparentBoxItem",
+                            "mysterySlide",
+                        ],
+                    },
+                    stage2Reducer
+                ),
+                stage3: persistReducer(
+                    {
+                        key: "stage3",
+                        storage,
+                        blacklist: [
+                            "selectedItem",
+                            "storageItems",
+                            "inTransparentBoxItem",
+                            "mysterySlide",
+                            "smallRoomItems",
+                        ],
+                    },
+                    stage3Reducer
+                ),
                 router: connectRouter(history),
             })
         ),
-        composeReduxDevToolsEnhancers(middlewareEnhancer)
+        middlewareEnhancer
     );
     return store;
 }

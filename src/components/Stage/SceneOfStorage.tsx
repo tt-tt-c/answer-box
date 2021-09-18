@@ -12,7 +12,7 @@ import {
 } from "../../reducks/store/selectors";
 import { StageNum } from "../Common/Route";
 import { useDispatch } from "react-redux";
-import { fetchStorageItems } from "../../reducks/stage1/operations";
+import { fetchStorageItems } from "../../reducks/store/operations";
 import { stageActions } from "../../reducks/store/actions";
 import { loadingActions } from "../../reducks/loading/actions";
 
@@ -27,9 +27,9 @@ const SceneOfStorage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (storageItems.length === 0 && problemNum === 1)
-            dispatch(fetchStorageItems());
-    }, [dispatch, problemNum, storageItems]);
+        if (storageItems.length === 0)
+            dispatch(fetchStorageItems(stageId));
+    }, [dispatch, problemNum, storageItems, stageId]);
 
     const itemElms = [];
     for (let i = 0; i < storageItems.length; i += 5) {

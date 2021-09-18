@@ -6,6 +6,7 @@ import bg_img_01 from './bg_img_01.png'
 import bg_img_02 from './bg_img_02.png'
 import bg_img_03 from './bg_img_03.png'
 import bg_img_04 from './bg_img_04.png'
+import bg_img_05 from './bg_img_05.png'
 
 //icon
 import icon_img_01 from './icon_01.png'
@@ -38,6 +39,7 @@ export const bg_01 = bg_img_01;
 export const bg_02 = bg_img_02;
 export const bg_03 = bg_img_03;
 export const bg_04 = bg_img_04;
+export const bg_05 = bg_img_05;
 
 //icon
 export const icon_01 = icon_img_01;

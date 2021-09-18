@@ -1,5 +1,5 @@
 import actionCreatorFactory from "typescript-fsa";
-import { selectedItemAlias } from "./types";
+import { ItemAlias, SelectedItemAlias } from "./types";
 
 const actionCreator = actionCreatorFactory();
 
@@ -7,6 +7,9 @@ export const stage2Actions = {
     updateIsCleared: actionCreator<boolean>("UPDATE_IS_CLEARED"),
     updateProblemNum: actionCreator<number>("UPDATE_PROBLEM_NUM"),
     releaseSelectedItem: actionCreator("RELEASE_SELECTED_ITEM"),
-    updateSelectedItem: actionCreator<selectedItemAlias>("UPDATE_SELECTED_ITEM"),
+    updateSelectedItem: actionCreator<SelectedItemAlias>("UPDATE_SELECTED_ITEM"),
+    updateInTransparentBoxItem: actionCreator<SelectedItemAlias>("UPDATE_IN_TRANSPARENT_BOX_ITEM"),
     updateSeleteMode: actionCreator<boolean>("UPDATE_SELECTE_MODE"),
+    updateStorageItems: actionCreator<ItemAlias[]>("UPDATE_STORAGE_ITEMS"),
+    updateMysterySlide: actionCreator<string | null>("UPDATE_MYSTERY_SLIDE"),
 };

@@ -8,7 +8,7 @@ import { Overlay } from "../Common";
 import { StageNum } from "../Common/Route";
 
 type Props = {
-    boxName: "a" | "b" | "o" | "x";
+    placeId: 1|2|3|4,
     isUsedSendButton: boolean;
     doAnswerFunc: Function;
     doSendFunc?: Function;
@@ -18,8 +18,15 @@ type Props = {
 
 export type AnswerButtonsModalState = Props & { isShowned: boolean };
 
+const placeNames = {
+    1: "a",
+    2: "b",
+    3: "o",
+    4: "x",
+}
+
 const ConfirmModal: React.FC<Props> = ({
-    boxName,
+    placeId,
     isUsedSendButton,
     doAnswerFunc,
     doSendFunc,
@@ -42,7 +49,7 @@ const ConfirmModal: React.FC<Props> = ({
                         closeFunc();
                     }}
                 />
-                <h3>{`Box.「${boxName.toUpperCase()}」`}</h3>
+                <h3>{`Box.「${placeNames[placeId].toUpperCase()}」`}</h3>
                 <SelectedItemContainer>
                     <p>選択中のアイテム</p>
                     <SelectedItemFigure>

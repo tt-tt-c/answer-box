@@ -11,3 +11,5 @@ export const getInTransparentBoxItem = (stage1: Stage1Alias) => stage1.inTranspa
 export const getIsSelectMode = (stage1: Stage1Alias) => stage1.isSelectMode;
 
 export const getStorageItems = (stage1: Stage1Alias) => stage1.storageItems;
+
+export const getMysterySlide = (stage1: Stage1Alias) => stage1.mysterySlide;

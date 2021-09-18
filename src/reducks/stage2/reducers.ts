@@ -2,7 +2,7 @@ import { reducerWithInitialState } from "typescript-fsa-reducers";
 import { stage2Actions } from "./actions";
 import { initialState } from "../store/initialState";
 
-export const stage2Reducer = reducerWithInitialState(initialState.stage2)
+export const stage2Reducer = reducerWithInitialState(initialState.stage1)
     .case(stage2Actions.updateIsCleared, (state, isCleared) => {
         return {
             ...state,
@@ -21,6 +21,12 @@ export const stage2Reducer = reducerWithInitialState(initialState.stage2)
             selectedItem: null,
         };
     })
+    .case(stage2Actions.updateInTransparentBoxItem, (state, selectedItem) => {
+        return {
+            ...state,
+            inTransparentBoxItem: {...selectedItem},
+        };
+    })
     .case(stage2Actions.updateSelectedItem, (state, selectedItem) => {
         return {
             ...state,
@@ -31,6 +37,18 @@ export const stage2Reducer = reducerWithInitialState(initialState.stage2)
         return {
             ...state,
             isSelectMode: isSelectMode,
+        }
+    })
+    .case(stage2Actions.updateStorageItems, (state, storageItems) => {
+        return {
+            ...state,
+            storageItems: [...storageItems],
+        }
+    })
+    .case(stage2Actions.updateMysterySlide, (state, mysterySlide) => {
+        return {
+            ...state,
+            mysterySlide: mysterySlide,
         }
     })
     .default((state) => {

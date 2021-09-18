@@ -45,6 +45,12 @@ export const stage1Reducer = reducerWithInitialState(initialState.stage1)
             storageItems: [...storageItems],
         }
     })
+    .case(stage1Actions.updateMysterySlide, (state, mysterySlide) => {
+        return {
+            ...state,
+            mysterySlide: mysterySlide,
+        }
+    })
     .default((state) => {
         return { ...state };
     });

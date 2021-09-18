@@ -12,6 +12,7 @@ import {
     icon_06,
 } from "../../assets/img";
 import { loadingActions } from "../../reducks/loading/actions";
+import { answerByItem } from "../../reducks/store/operations";
 import {    
     getSelectedItem,
 } from "../../reducks/store/selectors";
@@ -42,7 +43,7 @@ const SceneOfAnswerBox: React.FC<Props> = ({
     const { stageId } = useParams<{ stageId: StageNum }>();
     const initAnswerButtonsModalState: AnswerButtonsModalState = {
         isShowned: false,
-        boxName: "a",
+        placeId: 1,
         isUsedSendButton: false,
         isOverlayClickable: true,
         doAnswerFunc: () => {},
@@ -59,20 +60,22 @@ const SceneOfAnswerBox: React.FC<Props> = ({
         setAnswerButtonsModalState({ ...initAnswerButtonsModalState });
     };
 
-    const doAnswerFunc = () => {
+    const doAnswerFunc = (placeId: 1|2|3|4) => {
         dispatch(loadingActions.showLoading());
         closeFunc();
+        dispatch(answerByItem(stageId, placeId));
         dispatch(loadingActions.hideLoading());
     };
 
-    const answerBoxBtnClick = (boxName: "a" | "b" | "o" | "x") => {
+    const answerBoxBtnClick = (placeId:1|2|3|4) => {
+
         if (isClickable) {
             const modalState = {
                 ...initAnswerButtonsModalState,
             };
-            modalState.boxName = boxName;
+            modalState.placeId = placeId;
             modalState.isShowned = true;
-            modalState.doAnswerFunc = () => doAnswerFunc();
+            modalState.doAnswerFunc = () => doAnswerFunc(placeId);
             modalState.closeFunc = () => closeFunc();
             setAnswerButtonsModalState(modalState);
         }
@@ -87,7 +90,7 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                         <AnswerBoxButtonWrapper>
                             <AnswerBoxButton
                                 isClickable={isClickable}
-                                onClick={() => answerBoxBtnClick("a")}
+                                onClick={() => answerBoxBtnClick(1)}
                             >
                                 Aにいれる
                             </AnswerBoxButton>
@@ -105,7 +108,7 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                         <AnswerBoxButtonWrapper>
                             <AnswerBoxButton
                                 isClickable={isClickable}
-                                onClick={() => answerBoxBtnClick("b")}
+                                onClick={() => answerBoxBtnClick(2)}
                             >
                                 Bにいれる
                             </AnswerBoxButton>
@@ -122,7 +125,7 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                         <AnswerBoxButtonWrapper>
                             <AnswerBoxButton
                                 isClickable={isClickable}
-                                onClick={() => answerBoxBtnClick("o")}
+                                onClick={() => answerBoxBtnClick(3)}
                             >
                                 Oにいれる
                             </AnswerBoxButton>
@@ -139,7 +142,7 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                         <AnswerBoxButtonWrapper>
                             <AnswerBoxButton
                                 isClickable={isClickable}
-                                onClick={() => answerBoxBtnClick("x")}
+                                onClick={() => answerBoxBtnClick(4)}
                             >
                                 Xにいれる
                             </AnswerBoxButton>
