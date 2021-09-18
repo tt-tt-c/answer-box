@@ -16,5 +16,7 @@ export type Stage1Alias = {
     problemNum: number;
     selectedItem: SelectedItemAlias | null;
     isSelectMode: boolean;
-    storageItems: Array<ItemAlias>
+    storageItems: Array<ItemAlias>;
+    inTransparentBoxItem: SelectedItemAlias | null;
+    mysterySlide: null | string;
 };

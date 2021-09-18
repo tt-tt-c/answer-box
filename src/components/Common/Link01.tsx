@@ -8,11 +8,12 @@ type Props = {
     style: {
         [key: string] : string;
     }
+    onClick?:Function
 };
 
-const Link01: React.FC<Props> = ({ to, style, children }) => {
+const Link01: React.FC<Props> = ({ to, style, onClick=()=>{}, children }) => {
     return (
-        <AppLink style={style} to={to}>
+        <AppLink style={style} to={to} onClick={() => onClick()}>
             <span>{children}</span>
             <i />
         </AppLink>

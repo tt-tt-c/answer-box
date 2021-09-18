@@ -1,5 +1,5 @@
 import { Switch, Route as ReactRoute, Redirect } from "react-router-dom";
-import { Layout } from ".";
+import { Layout, StageAuth } from ".";
 import { TopPage, StagePage } from "../../templates";
 
 export type StageNum = "1" | "2" | "3" | "4" | "5";
@@ -30,49 +30,54 @@ const Route: React.FC = () => {
             <Layout>
                 <Switch>
                     <ReactRoute exact path={path.top} component={TopPage} />
-                    <ReactRoute
-                        exact
-                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.storage})`}
-                        component={StagePage}
-                    />                    
-                    <ReactRoute
-                        exact
-                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.mysterySlide})`}
-                        component={StagePage}
-                    />
-                    <ReactRoute
-                        exact
-                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.answerBox})`}
-                        component={StagePage}
-                    />                    
-                    <ReactRoute
-                        exact
-                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.roomA})`}
-                        component={StagePage}
-                    />
-                    <ReactRoute
-                        exact
-                        path={`${path.stage}/:stageId([1-5])/:pathId(${path2.roomB})`}
-                        component={StagePage}
-                    />
-                    <ReactRoute
-                        exact
-                        path={`${path.stage}/:stageId([3-5])/:pathId(${path2.roomO})`}
-                        component={StagePage}
-                    />
-                    <ReactRoute
-                        exact
-                        path={`${path.stage}/:stageId([3-5])/${path2.roomX}`}
-                        component={StagePage}
-                    />
-                    <ReactRoute
-                        path={`${path.stage}/:stageId([1-5])`}
-                        render={({ match }) => (
-                            <Redirect
-                                to={`${path.stage}/${match.params.stageId}/${path2.mysterySlide}`}
+
+                    <ReactRoute path={`${path.stage}/:stageId([1-5])`}>
+                        <StageAuth>
+                            <ReactRoute
+                                exact
+                                path={`${path.stage}/:stageId([1-5])/:pathId(${path2.storage})`}
+                                component={StagePage}
                             />
-                        )}
-                    />
+                            <ReactRoute
+                                exact
+                                path={`${path.stage}/:stageId([1-5])/:pathId(${path2.mysterySlide})`}
+                                component={StagePage}
+                            />
+                            <ReactRoute
+                                exact
+                                path={`${path.stage}/:stageId([1-5])/:pathId(${path2.answerBox})`}
+                                component={StagePage}
+                            />
+                            <ReactRoute
+                                exact
+                                path={`${path.stage}/:stageId([1-5])/:pathId(${path2.roomA})`}
+                                component={StagePage}
+                            />
+                            <ReactRoute
+                                exact
+                                path={`${path.stage}/:stageId([1-5])/:pathId(${path2.roomB})`}
+                                component={StagePage}
+                            />
+                            <ReactRoute
+                                exact
+                                path={`${path.stage}/:stageId([3-5])/:pathId(${path2.roomO})`}
+                                component={StagePage}
+                            />
+                            <ReactRoute
+                                exact
+                                path={`${path.stage}/:stageId([3-5])/${path2.roomX}`}
+                                component={StagePage}
+                            />
+                            <ReactRoute
+                                path={`${path.stage}/:stageId([1-5])`}
+                                render={({ match }) => (
+                                    <Redirect
+                                        to={`${path.stage}/${match.params.stageId}/${path2.mysterySlide}`}
+                                    />
+                                )}
+                            />
+                        </StageAuth>
+                    </ReactRoute>
                     <Redirect to={path.top} />
                 </Switch>
             </Layout>

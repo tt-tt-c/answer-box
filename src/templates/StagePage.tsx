@@ -1,4 +1,4 @@
-import { GameLayout } from "../components/Stage";
+import { ClearModal, GameLayout, RightOrWrongModal } from "../components/Stage";
 import React from "react";
 import { Subtitle } from "../components/Common";
 import { RouteComponentProps } from "react-router-dom";
@@ -17,10 +17,12 @@ type Props = RouteComponentProps<{
 }>;
 
 const StagePage: React.FC<Props> = (props) => {
+    const test = localStorage.getItem("persist:root");
+    console.log(test); 
     const stageId = props.match.params.stageId;
     const pathId = props.match.params.pathId;
     const availableBox = allAvailable;
-    
+
     switch (stageId) {
         case "1":
             availableBox.o = false;
@@ -29,9 +31,10 @@ const StagePage: React.FC<Props> = (props) => {
     return (
         <>
             <GameLayout>
-                <Subtitle>{`STAGE ${stageId}`}</Subtitle>
-                <PathText>{`- ${pathId.toUpperCase()} -`}</PathText>
-
+                <TitleWrapper>
+                    <Subtitle>{`STAGE ${stageId}`}</Subtitle>
+                    <PathText>{`～ ${pathId.toUpperCase()} ～`}</PathText>
+                </TitleWrapper>
                 {pathId === path2.answerBox && (
                     <SceneOfAnswerBox
                         availableBox={availableBox}
@@ -46,14 +49,24 @@ const StagePage: React.FC<Props> = (props) => {
                     pathId !== path2.storage && (
                         <SceneOfSmallRoom></SceneOfSmallRoom>
                     )}
+                <ClearModal />
+                <RightOrWrongModal />
             </GameLayout>
+            
         </>
     );
 };
 
+const TitleWrapper = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 30px;
+`;
 const PathText = styled.p`
-    margin-top: 5px;
     font-size: 20px;
+    margin: 5px 0 0 20px;
 `;
 
 export default StagePage;

@@ -21,6 +21,12 @@ export const stage1Reducer = reducerWithInitialState(initialState.stage1)
             selectedItem: null,
         };
     })
+    .case(stage1Actions.updateInTransparentBoxItem, (state, selectedItem) => {
+        return {
+            ...state,
+            inTransparentBoxItem: {...selectedItem},
+        };
+    })
     .case(stage1Actions.updateSelectedItem, (state, selectedItem) => {
         return {
             ...state,

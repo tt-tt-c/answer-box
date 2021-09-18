@@ -22,11 +22,12 @@ const ConfirmModal: React.FC<Props> = ({
     isOverlayClickable = false,
 }) => {
     return (
-        <Overlay
-            onClick={() => {
-                if (isOverlayClickable) closeFunc();
-            }}
-        >
+        <>
+            <Overlay
+                onClick={() => {                    
+                    if (isOverlayClickable) closeFunc();
+                }}
+            ></Overlay>
             <ConfirmWrapper>
                 <ConfirmText>{confirmText}</ConfirmText>
                 <SelectButtons>
@@ -42,12 +43,12 @@ const ConfirmModal: React.FC<Props> = ({
                     </li>
                 </SelectButtons>
             </ConfirmWrapper>
-        </Overlay>
+        </>
     );
 };
 
 const ConfirmWrapper = styled.div`
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -60,6 +61,7 @@ const ConfirmWrapper = styled.div`
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
+    z-index: 9991;
 `;
 
 const ConfirmText = styled.p`

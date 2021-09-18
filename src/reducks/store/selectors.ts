@@ -1,10 +1,10 @@
-import { StageNum } from "../../components/Common/Route";
 import {
     getIsCleared as getIsClearedOf1,
     getProblemNum as getProblemNumOf1,
     getIsSelectMode as getIsSelectModeOf1,
     getSelectedItem as getSelectedItemOf1,
     getStorageItems as getStorageItemsOf1,
+    getInTransparentBoxItem as getInTransparentBoxItemOf1,
 } from "../stage1/selectors";
 import {
     getIsCleared as getIsClearedOf2,
@@ -14,7 +14,7 @@ import {
 } from "../stage2/selectors";
 import { AppState } from "./store";
 
-export const getIsCleared = (stageId: StageNum, state: AppState) => {
+export const getIsCleared = (stageId: string, state: AppState) => {
     switch (stageId) {
         case "1":
             return getIsClearedOf1(state.stage1);
@@ -29,7 +29,7 @@ export const getIsCleared = (stageId: StageNum, state: AppState) => {
     }
 };
 
-export const getProblemNum = (stageId: StageNum, state: AppState) => {
+export const getProblemNum = (stageId: string, state: AppState) => {
     switch (stageId) {
         case "1":
             return getProblemNumOf1(state.stage1);
@@ -86,5 +86,20 @@ export const getStorageItems = (stageId: string, state: AppState) => {
             return getStorageItemsOf1(state.stage1);
         default:
             return getStorageItemsOf1(state.stage1);
+    }
+};
+
+export const getInTransparentBoxItem = (stageId: string, state: AppState) => {
+    switch (stageId) {
+        case "1":
+            return getInTransparentBoxItemOf1(state.stage1);
+        case "2":
+            return getInTransparentBoxItemOf1(state.stage1);
+        case "3":
+            return getInTransparentBoxItemOf1(state.stage1);
+        case "4":
+            return getInTransparentBoxItemOf1(state.stage1);
+        default:
+            return getInTransparentBoxItemOf1(state.stage1);
     }
 };

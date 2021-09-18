@@ -8,6 +8,7 @@ export const stage1Actions = {
     updateProblemNum: actionCreator<number>("UPDATE_PROBLEM_NUM"),
     releaseSelectedItem: actionCreator("RELEASE_SELECTED_ITEM"),
     updateSelectedItem: actionCreator<SelectedItemAlias>("UPDATE_SELECTED_ITEM"),
+    updateInTransparentBoxItem: actionCreator<SelectedItemAlias>("UPDATE_IN_TRANSPARENT_BOX_ITEM"),
     updateSeleteMode: actionCreator<boolean>("UPDATE_SELECTE_MODE"),
     updateStorageItems: actionCreator<ItemAlias[]>("UPDATE_STORAGE_ITEMS"),
 };
