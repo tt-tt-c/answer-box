@@ -1,4 +1,4 @@
-import { GameLayout } from "../components/Stage";
+import { ClearModal, GameLayout, RightOrWrongModal } from "../components/Stage";
 import React from "react";
 import { Subtitle } from "../components/Common";
 import { RouteComponentProps } from "react-router-dom";
@@ -20,18 +20,24 @@ const StagePage: React.FC<Props> = (props) => {
     const stageId = props.match.params.stageId;
     const pathId = props.match.params.pathId;
     const availableBox = allAvailable;
-    
+
     switch (stageId) {
         case "1":
             availableBox.o = false;
             availableBox.x = false;
+            break;
+        case "2":
+            availableBox.a = false;
+            availableBox.b = false;
+            break;
     }
     return (
         <>
             <GameLayout>
-                <Subtitle>{`STAGE ${stageId}`}</Subtitle>
-                <PathText>{`- ${pathId.toUpperCase()} -`}</PathText>
-
+                <TitleWrapper>
+                    <Subtitle>{`STAGE ${stageId}`}</Subtitle>
+                    <PathText>{`～ ${pathId.toUpperCase()} ～`}</PathText>
+                </TitleWrapper>
                 {pathId === path2.answerBox && (
                     <SceneOfAnswerBox
                         availableBox={availableBox}
@@ -41,19 +47,27 @@ const StagePage: React.FC<Props> = (props) => {
                     <SceneOfMysterySlide></SceneOfMysterySlide>
                 )}
                 {pathId === path2.storage && <SceneOfStorage></SceneOfStorage>}
-                {pathId !== path2.answerBox &&
-                    pathId !== path2.mysterySlide &&
-                    pathId !== path2.storage && (
-                        <SceneOfSmallRoom></SceneOfSmallRoom>
-                    )}
+                {pathId === path2.roomA && <SceneOfSmallRoom placeId={1}/>}
+                {pathId === path2.roomB && <SceneOfSmallRoom placeId={2}/>}
+                {pathId === path2.roomO && <SceneOfSmallRoom placeId={3}/>}
+                {pathId === path2.roomX && <SceneOfSmallRoom placeId={4}/>}
+                <ClearModal />
+                <RightOrWrongModal />
             </GameLayout>
         </>
     );
 };
 
+const TitleWrapper = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 30px;
+`;
 const PathText = styled.p`
-    margin-top: 5px;
     font-size: 20px;
+    margin: 5px 0 0 20px;
 `;
 
 export default StagePage;

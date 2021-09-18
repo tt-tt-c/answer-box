@@ -4,6 +4,7 @@ import { useSelector } from "../../reducks/store/store";
 import styled from "styled-components";
 import { bg_02 } from "../../assets/img";
 import {
+    getInTransparentBoxItem,
     getIsSelectMode,
     getProblemNum,
     getSelectedItem,
@@ -11,7 +12,7 @@ import {
 } from "../../reducks/store/selectors";
 import { StageNum } from "../Common/Route";
 import { useDispatch } from "react-redux";
-import { fetchStorageInitItems } from "../../reducks/stage1/operations";
+import { fetchStorageItems } from "../../reducks/store/operations";
 import { stageActions } from "../../reducks/store/actions";
 import { loadingActions } from "../../reducks/loading/actions";
 
@@ -22,12 +23,13 @@ const SceneOfStorage = () => {
     const problemNum = getProblemNum(stageId, selector);
     const isSelectMode = getIsSelectMode(stageId, selector);
     const selectedItem = getSelectedItem(stageId, selector);
+    const inTransparentBoxItem = getInTransparentBoxItem(stageId, selector);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (storageItems.length === 0 && problemNum === 0)
-            dispatch(fetchStorageInitItems());
-    }, [dispatch, problemNum, storageItems]);
+        if (storageItems.length === 0)
+            dispatch(fetchStorageItems(stageId));
+    }, [dispatch, problemNum, storageItems, stageId]);
 
     const itemElms = [];
     for (let i = 0; i < storageItems.length; i += 5) {
@@ -38,7 +40,11 @@ const SceneOfStorage = () => {
         itemElms.push(
             <DeskWrapper key={`storageItemWrapper${i}`}>
                 {pickItems.map((item, index: number) => {
-                    if (!selectedItem || item.id !== selectedItem.id) {
+                    if (
+                        (!selectedItem || item.id !== selectedItem.id) &&
+                        (!inTransparentBoxItem ||
+                            item.id !== inTransparentBoxItem.id)
+                    ) {
                         return (
                             <Item
                                 key={`storageItem${item.id}${i + index}`}
@@ -71,9 +77,18 @@ const SceneOfStorage = () => {
                                 }}
                             />
                         );
-                    } else {
+                    } else if (selectedItem && item.id === selectedItem.id) {
                         return (
                             <SelectedItem
+                                key={`storageItem${item.id}${index}`}
+                                width={itemSizeParams[item.size]}
+                                height={itemSizeParams[item.size]}
+                                itemNum={index % 5}
+                            />
+                        );
+                    } else {
+                        return (
+                            <InBoxItem
                                 key={`storageItem${item.id}${index}`}
                                 width={itemSizeParams[item.size]}
                                 height={itemSizeParams[item.size]}
@@ -93,7 +108,6 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     flex-flow: column wrap;
-    padding: 10px 0;
     height: auto;
     width: 100%;
 `;
@@ -181,5 +195,7 @@ const SelectedItem = styled.div<{
             : `${itemPosParams[0].left}%`};
     transform: translate(-50%, -50%);
 `;
+
+const InBoxItem = styled(SelectedItem)``;
 
 export default SceneOfStorage;

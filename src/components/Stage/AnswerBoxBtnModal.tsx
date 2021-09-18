@@ -1,14 +1,14 @@
 import React from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
-import { icon_01 } from "../../assets/img";
+import { icon_01, icon_07 } from "../../assets/img";
 import { getSelectedItem } from "../../reducks/store/selectors";
 import { useSelector } from "../../reducks/store/store";
 import { Overlay } from "../Common";
 import { StageNum } from "../Common/Route";
 
 type Props = {
-    boxName: "a" | "b" | "o" | "x";
+    placeId: 1|2|3|4,
     isUsedSendButton: boolean;
     doAnswerFunc: Function;
     doSendFunc?: Function;
@@ -18,8 +18,15 @@ type Props = {
 
 export type AnswerButtonsModalState = Props & { isShowned: boolean };
 
+const placeNames = {
+    1: "a",
+    2: "b",
+    3: "o",
+    4: "x",
+}
+
 const ConfirmModal: React.FC<Props> = ({
-    boxName,
+    placeId,
     isUsedSendButton,
     doAnswerFunc,
     doSendFunc,
@@ -30,14 +37,21 @@ const ConfirmModal: React.FC<Props> = ({
     const { stageId } = useParams<{ stageId: StageNum }>();
     const selectedItem = getSelectedItem(stageId, selector);
     return (
-        <Overlay
-            onClick={() => {
-                if (isOverlayClickable) closeFunc();
-            }}
-        >
+        <>
+            <Overlay
+                onClick={() => {
+                    if (isOverlayClickable) closeFunc();
+                }}
+            />
             <ModalWrapper>
+                <CloseButton
+                    onClick={() => {
+                        closeFunc();
+                    }}
+                />
+                <h3>{`Box.「${placeNames[placeId].toUpperCase()}」`}</h3>
                 <SelectedItemContainer>
-                    <p>選択中の<br/>アイテム</p>
+                    <p>選択中のアイテム</p>
                     <SelectedItemFigure>
                         <img src={selectedItem?.img} alt={"selectedItem"} />
                         <figcaption>{selectedItem?.name}</figcaption>
@@ -68,44 +82,80 @@ const ConfirmModal: React.FC<Props> = ({
                     )}
                 </ButtonsWrapper>
             </ModalWrapper>
-        </Overlay>
+        </>
     );
 };
 
-const ModalWrapper = styled.div`
+const CloseButton = styled.input.attrs((props) => ({ type: "button" }))`
     position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    display: block;
+    box-sizing: border-box;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 30px;
+    height: 30px;
+    background: center/40px 40px url(${icon_07}) no-repeat;
+    outline: none;
+    transition: opacity 0.3s;
+    :hover {
+        opacity: 0.5;
+    }
+`;
+
+const ModalWrapper = styled.div`
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: auto;
+    min-width: 400px;
     height: auto;
     background: #fff;
-    padding: 20px 20px 10px;
+    padding: 70px 20px 10px;
     border-radius: 5px;
     box-shadow: 1px 1px 1px 1px #ccc;
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: column wrap;
     justify-content: space-between;
+    z-index: 9991;
+    h3 {
+        position: absolute;
+        color: #333;
+        top: 15px;
+        left: 20px;
+        font-size: 40px;
+        line-height: 1;
+    }
 `;
 
 const SelectedItemContainer = styled.div`
+    box-sizing: border-box;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;    
     > p {
         color: #000;
         font-size: 16px;
-        font-weight: 600;        
-        line-height: 1.6;  
+        font-weight: 600;
+        line-height: 1.6;
         position: relative;
-        padding-right: 50px;
+        margin-right: 60px;
+        border: 5px solid #CCC;
+        padding: 10px;
     }
     > p::after {
         content: "";
         position: absolute;
         top: 50%;
-        right: 10px;
+        right: -50px;
         transform: translateY(-50%);
         display: inline-block;
         width: 30px;
@@ -120,8 +170,9 @@ const SelectedItemFigure = styled.figure`
     justify-content: center;
     align-items: center;
     color: #000;
-    border: 1px solid #ccc;
-    padding: 10px;
+    border: 3px solid #d9d9d9;
+    padding: 10px 40px;
+    background: #000;
     img {
         display: block;
         width: 60px;
@@ -130,14 +181,15 @@ const SelectedItemFigure = styled.figure`
     figcaption {
         margin-top: 10px;
         text-align: center;
-        width: 100%;        
+        width: 100%;
+        color: #fff;
     }
 `;
 
 const ButtonsWrapper = styled.ul`
     display: flex;
     flex-flow: row nowrap;
-    justify-content: right;
+    justify-content: center;
     margin-top: 20px;
     li {
         margin: 0 20px;

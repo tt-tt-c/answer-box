@@ -12,9 +12,8 @@ import {
     icon_06,
 } from "../../assets/img";
 import { loadingActions } from "../../reducks/loading/actions";
-import {
-    getIsSelectMode,
-    getProblemNum,
+import { answerByItem } from "../../reducks/store/operations";
+import {    
     getSelectedItem,
 } from "../../reducks/store/selectors";
 import { useSelector } from "../../reducks/store/store";
@@ -44,7 +43,7 @@ const SceneOfAnswerBox: React.FC<Props> = ({
     const { stageId } = useParams<{ stageId: StageNum }>();
     const initAnswerButtonsModalState: AnswerButtonsModalState = {
         isShowned: false,
-        boxName: "a",
+        placeId: 1,
         isUsedSendButton: false,
         isOverlayClickable: true,
         doAnswerFunc: () => {},
@@ -52,21 +51,34 @@ const SceneOfAnswerBox: React.FC<Props> = ({
         closeFunc: () => {},
     };
     const [AnswerButtonsModalState, setAnswerButtonsModalState] =
-        useState<AnswerButtonsModalState>(initAnswerButtonsModalState);
-    const problemNum = getProblemNum(stageId, selector);
-    const isSelectMode = getIsSelectMode(stageId, selector);
+        useState<AnswerButtonsModalState>(initAnswerButtonsModalState);    
     const selectedItem = getSelectedItem(stageId, selector);
     const isClickable = selectedItem !== null;
     const dispatch = useDispatch();
 
     const closeFunc = () => {
-        setAnswerButtonsModalState({...initAnswerButtonsModalState});
+        setAnswerButtonsModalState({ ...initAnswerButtonsModalState });
     };
 
-    const doAnswerFunc = () => {
+    const doAnswerFunc = (placeId: 1|2|3|4) => {
         dispatch(loadingActions.showLoading());
         closeFunc();
+        dispatch(answerByItem(stageId, placeId));
         dispatch(loadingActions.hideLoading());
+    };
+
+    const answerBoxBtnClick = (placeId:1|2|3|4) => {
+
+        if (isClickable) {
+            const modalState = {
+                ...initAnswerButtonsModalState,
+            };
+            modalState.placeId = placeId;
+            modalState.isShowned = true;
+            modalState.doAnswerFunc = () => doAnswerFunc(placeId);
+            modalState.closeFunc = () => closeFunc();
+            setAnswerButtonsModalState(modalState);
+        }
     };
 
     return (
@@ -75,22 +87,11 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                 <AnswerSendButoonWrapper></AnswerSendButoonWrapper>
                 <AnswerBoxWrapper isAvailable={availableBox.a}>
                     {availableBox.a && (
-                        <AnswerBoxButtonWrapper
-                            onClick={() => {
-                                if (isClickable) {
-                                    const modalState =
-                                        {...initAnswerButtonsModalState};
-                                    modalState.isShowned = true;
-                                    modalState.doAnswerFunc = () => doAnswerFunc();
-                                    modalState.closeFunc = () => closeFunc();
-                                    console.log(modalState);
-                                    setAnswerButtonsModalState(modalState);
-                                } else {
-                                    console.log(selectedItem);
-                                }
-                            }}
-                        >
-                            <AnswerBoxButton isClickable={isClickable}>
+                        <AnswerBoxButtonWrapper>
+                            <AnswerBoxButton
+                                isClickable={isClickable}
+                                onClick={() => answerBoxBtnClick(1)}
+                            >
                                 Aにいれる
                             </AnswerBoxButton>
                             <AnswerBoxDownIcon src={icon_05} alt="downLogo" />
@@ -105,7 +106,10 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                 <AnswerBoxWrapper isAvailable={availableBox.b}>
                     {availableBox.b && (
                         <AnswerBoxButtonWrapper>
-                            <AnswerBoxButton isClickable={isClickable}>
+                            <AnswerBoxButton
+                                isClickable={isClickable}
+                                onClick={() => answerBoxBtnClick(2)}
+                            >
                                 Bにいれる
                             </AnswerBoxButton>
                             <AnswerBoxDownIcon src={icon_05} alt="downLogo" />
@@ -119,7 +123,10 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                 <AnswerBoxWrapper isAvailable={availableBox.o}>
                     {availableBox.o && (
                         <AnswerBoxButtonWrapper>
-                            <AnswerBoxButton isClickable={isClickable}>
+                            <AnswerBoxButton
+                                isClickable={isClickable}
+                                onClick={() => answerBoxBtnClick(3)}
+                            >
                                 Oにいれる
                             </AnswerBoxButton>
                             <AnswerBoxDownIcon src={icon_05} alt="downLogo" />
@@ -133,7 +140,10 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                 <AnswerBoxWrapper isAvailable={availableBox.x}>
                     {availableBox.x && (
                         <AnswerBoxButtonWrapper>
-                            <AnswerBoxButton isClickable={isClickable}>
+                            <AnswerBoxButton
+                                isClickable={isClickable}
+                                onClick={() => answerBoxBtnClick(4)}
+                            >
                                 Xにいれる
                             </AnswerBoxButton>
                             <AnswerBoxDownIcon src={icon_05} alt="downLogo" />
@@ -160,8 +170,7 @@ const answerBoxImgParams = {
 const Wrapper = styled.div`
     display: flex;
     justify-content: space-around;
-    flex-flow: row wrap;
-    padding: 20px 0;
+    flex-flow: row wrap;    
     height: auto;
     width: 100%;
 `;

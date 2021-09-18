@@ -16,13 +16,13 @@ const DrawerMenu: React.FC<Props> = ({ closeFunc }) => {
         <Wrapper>
             <CloseButton type={"button"} onClick={() => closeFunc()} />
             <LinkWrapper>
-                <li><Link01 to={path2.storage} style={LinkStyle}>ものおき</Link01></li>                
-                <li><Link01 to={path2.answerBox} style={LinkStyle}>アンサーボックス</Link01></li>
-                <li><Link01 to={path2.mysterySlide} style={LinkStyle}>謎解き</Link01></li>
-                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomA} style={LinkStyle}>Room-A</Link01></li>)}
-                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomB} style={LinkStyle}>Room-B</Link01></li>)}
-                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomO} style={LinkStyle}>Room-O</Link01></li>)}
-                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomX} style={LinkStyle}>Room-X</Link01></li>)}
+                <li><Link01 to={path2.storage} style={LinkStyle} onClick={closeFunc}>ものおき</Link01></li>                
+                <li><Link01 to={path2.answerBox} style={LinkStyle} onClick={closeFunc}>アンサーボックス</Link01></li>
+                <li><Link01 to={path2.mysterySlide} style={LinkStyle} onClick={closeFunc}>謎解き</Link01></li>
+                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomA} style={LinkStyle} onClick={closeFunc}>Room-A</Link01></li>)}
+                {stageId && !/[1-2]/.test(stageId) && (<li><Link01 to={path2.roomB} style={LinkStyle} onClick={closeFunc}>Room-B</Link01></li>)}
+                {stageId && !/[1-3]/.test(stageId) && (<li><Link01 to={path2.roomO} style={LinkStyle} onClick={closeFunc}>Room-O</Link01></li>)}
+                {stageId && !/[1-3]/.test(stageId) && (<li><Link01 to={path2.roomX} style={LinkStyle} onClick={closeFunc}>Room-X</Link01></li>)}
             </LinkWrapper>
         </Wrapper>
     );
@@ -41,7 +41,7 @@ const Wrapper = styled.div`
     box-shadow: -5px 0 5px #ccc;
 `;
 
-const CloseButton = styled.input`
+const CloseButton = styled.input.attrs(props => ({type: "button"}))`
     position: absolute;
     top: 20px;
     left: 20px;

@@ -9,3 +9,4 @@ export { default as Button01 } from "./Button01";
 export { default as Toggle } from "./Toggle";
 export { default as Loading } from "./Loading";
 export { default as ConfirmModal } from "./ConfirmModal";
+export { default as StageAuth } from "./StageAuth";
