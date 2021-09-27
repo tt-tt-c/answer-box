@@ -7,6 +7,8 @@ import bg_img_02 from './bg_img_02.png'
 import bg_img_03 from './bg_img_03.png'
 import bg_img_04 from './bg_img_04.png'
 import bg_img_05 from './bg_img_05.png'
+import bg_img_06 from './bg_img_06.png'
+import bg_img_07 from './bg_img_07.png'
 
 //icon
 import icon_img_01 from './icon_01.png'
@@ -23,6 +25,7 @@ import icon_img_11 from './icon_11.png'
 import icon_img_12 from './icon_12.png'
 import icon_img_13 from './icon_13.png'
 import icon_img_14 from './icon_14.png'
+import icon_img_15 from './icon_15.png'
 
 //anserBox
 import answerBox_img_A from './answer-box_01.png'
@@ -40,6 +43,8 @@ export const bg_02 = bg_img_02;
 export const bg_03 = bg_img_03;
 export const bg_04 = bg_img_04;
 export const bg_05 = bg_img_05;
+export const bg_06 = bg_img_06;
+export const bg_07 = bg_img_07;
 
 //icon
 export const icon_01 = icon_img_01;
@@ -56,6 +61,7 @@ export const icon_11 = icon_img_11;
 export const icon_12 = icon_img_12;
 export const icon_13 = icon_img_13;
 export const icon_14 = icon_img_14;
+export const icon_15 = icon_img_15;
 
 //answerBox
 export const answerBox_A = answerBox_img_A;

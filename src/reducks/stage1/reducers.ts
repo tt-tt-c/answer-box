@@ -51,6 +51,24 @@ export const stage1Reducer = reducerWithInitialState(initialState.stage1)
             mysterySlide: mysterySlide,
         }
     })
+    .case(stage1Actions.updateBoxA, (state, boxA) => {
+        return {
+            ...state,
+            boxA: {...boxA},
+        };
+    })
+    .case(stage1Actions.updateSmile, (state, smile) => {
+        return {
+            ...state,
+            smile: {...smile},
+        };
+    })
+    .case(stage1Actions.stage1Reset, (state) => {        
+        return { 
+            ...state,
+            ...initialState.stage1,
+        }
+    })
     .default((state) => {
         return { ...state };
     });

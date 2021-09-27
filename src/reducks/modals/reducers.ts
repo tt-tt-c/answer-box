@@ -7,7 +7,7 @@ export const modalsReducer = reducerWithInitialState(initialState.modals)
         return {
             ...state,
             stageClearModal: {
-                isShowned: true,
+                isShown: true,
             },
         };
     })
@@ -15,7 +15,7 @@ export const modalsReducer = reducerWithInitialState(initialState.modals)
         return {
             ...state,
             stageClearModal: {
-                isShowned: false,
+                isShown: false,
             },
         };
     })
@@ -24,7 +24,7 @@ export const modalsReducer = reducerWithInitialState(initialState.modals)
             ...state,
             rightOrWrongModal: {
                 isCorrect: isCorrect,
-                isShowned: true,
+                isShown: true,
             }
         };
     })
@@ -33,7 +33,7 @@ export const modalsReducer = reducerWithInitialState(initialState.modals)
             ...state,
             rightOrWrongModal: {
                 isCorrect: false,
-                isShowned: false,
+                isShown: false,
             }
         };
     })

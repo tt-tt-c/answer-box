@@ -1,9 +1,9 @@
 export type ModalsAlias = {
     stageClearModal: {
-        isShowned: boolean;
+        isShown: boolean;
     },
     rightOrWrongModal: {
-        isShowned: boolean;
+        isShown: boolean;
         isCorrect: boolean;
     }
 }

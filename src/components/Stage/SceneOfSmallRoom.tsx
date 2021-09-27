@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { fetchSmallRoomItems } from "../../reducks/store/operations";
 import { stageActions } from "../../reducks/store/actions";
 import { loadingActions } from "../../reducks/loading/actions";
+import { getBlobUrl } from "../../function/common";
 
 type Props = {
     placeId: 1 | 2 | 3 | 4;
@@ -33,9 +34,8 @@ const SceneOfSmallRoom: React.FC<Props> = ({ placeId }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!smallRoomItems || smallRoomItems.length === 0)
-            dispatch(fetchSmallRoomItems(stageId, placeId));
-    }, [dispatch, problemNum, processNum, smallRoomItems, stageId, placeId]);
+        dispatch(fetchSmallRoomItems(stageId, placeId));
+    }, [dispatch, problemNum, processNum, stageId, placeId]);
 
     const itemElms = [];
     if (smallRoomItems && smallRoomItems.length > 0) {
@@ -54,8 +54,10 @@ const SceneOfSmallRoom: React.FC<Props> = ({ placeId }) => {
                         ) {
                             return (
                                 <Item
-                                    key={`smallRoomItem${item.id}${i + index}Place${placeId}`}
-                                    src={item.img}
+                                    key={`smallRoomItem${item.id}${
+                                        i + index
+                                    }Place${placeId}`}
+                                    src={getBlobUrl(item.img)}
                                     width={itemSizeParams[item.size]}
                                     height={itemSizeParams[item.size]}
                                     itemNum={index % 3}
@@ -94,7 +96,9 @@ const SceneOfSmallRoom: React.FC<Props> = ({ placeId }) => {
                         ) {
                             return (
                                 <SelectedItem
-                                    key={`smallRoomItem${item.id}${i + index}Place${placeId}`}
+                                    key={`smallRoomItem${item.id}${
+                                        i + index
+                                    }Place${placeId}`}
                                     width={itemSizeParams[item.size]}
                                     height={itemSizeParams[item.size]}
                                     itemNum={index % 5}
@@ -103,7 +107,9 @@ const SceneOfSmallRoom: React.FC<Props> = ({ placeId }) => {
                         } else {
                             return (
                                 <InBoxItem
-                                    key={`smallRoomItem${item.id}${i + index}Place${placeId}`}
+                                    key={`smallRoomItem${item.id}${
+                                        i + index
+                                    }Place${placeId}`}
                                     width={itemSizeParams[item.size]}
                                     height={itemSizeParams[item.size]}
                                     itemNum={index % 5}
@@ -145,7 +151,7 @@ const itemSizeParams = {
 
 const itemPosParams = [
     {
-        top: 30,
+        top: 25,
         left: 35,
     },
     {
@@ -154,15 +160,7 @@ const itemPosParams = [
     },
     {
         top: 20,
-        left: 70,
-    },
-    {
-        top: 25,
-        left: 15,
-    },
-    {
-        top: 38,
-        left: 60,
+        left: 65,
     },
 ];
 

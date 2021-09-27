@@ -14,7 +14,6 @@ export const getItems = async (
     processNum: number,
     placeId?: number
 ) => {
-    console.log(placeId, problemNum, processNum, stageId)
     const path = `${
         paths.items
     }/${stageId}?problemNum=${problemNum}&processNum=${processNum}${
@@ -22,15 +21,18 @@ export const getItems = async (
     }`;
     const fetchData = await fetch(path, { mode: "cors" });
     const json = await fetchData.json();
-    const { items, images, inBoxItemId, boxAId, egaoId } = json;
-    const blobs = [];
-    const blobUrls = [];
+    const { items, images, inBoxItemId, boxAId, smileId } = json;    
+    const imageBlobs = [];
     for (let i = 0; i < images.length; i++) {
-        const bytes = new Uint8Array(images[i].data);
-        blobs[i] = new Blob([bytes], { type: "image/png" });
-        blobUrls[i] = URL.createObjectURL(blobs[i]);
-    } 
-    return { items: items, imageUrls: blobUrls, inBoxItemId: inBoxItemId, boxAId: boxAId, egaoId: egaoId };
+        imageBlobs[i] = getBlob(images[i].data, "image/png");
+    }
+    return {
+        items: items,
+        imageBlobs: imageBlobs,
+        inBoxItemId: inBoxItemId,
+        boxAId: boxAId,
+        smileId: smileId,
+    };
 };
 
 //sendItem(モノを部屋に送信)
@@ -40,27 +42,18 @@ export const sendItem = async (
     problemNum: number,
     processNum: number,
     placeId: number,
-    inBoxItemId?: number
+    inBoxItemId: number | null
 ) => {
     const path = `${
         paths.send
-    }/${stageId}?itemId=${itemId}&problemNum=${problemNum}&processNum=${processNum}&placeId=${placeId}${
-        inBoxItemId ?  `&inBoxItemId=${inBoxItemId}`:''
+    }/${stageId}?prevItemId=${itemId}&problemNum=${problemNum}&processNum=${processNum}&placeId=${placeId}${
+        inBoxItemId ? `&inBoxItemId=${inBoxItemId}` : ""
     }`;
     const fetchData = await fetch(path, { mode: "cors" });
     const json = await fetchData.json();
-    const { isCorrect, item, image } = json;
-    let blob;
-    let blobUrl;
-    if (isCorrect && item && image) {
-        const bytes = new Uint8Array(image.data);
-        blob = new Blob([bytes], { type: "image/png" });
-        blobUrl = URL.createObjectURL(blob);
-    }
+    const { isCorrect } = json;
     return {
         isCorrect: isCorrect,
-        item: item,
-        imageUrl: blobUrl,
     };
 };
 
@@ -70,12 +63,10 @@ export const sendItem = async (
 export const answerByItem = async (
     stageId: number,
     itemId: number,
-    problemNum: number,    
+    problemNum: number,
     placeId: number
 ) => {
-    const path = `${
-        paths.answer
-    }/${stageId}?itemId=${itemId}&problemNum=${problemNum}&placeId=${placeId}`;
+    const path = `${paths.answer}/${stageId}?itemId=${itemId}&problemNum=${problemNum}&placeId=${placeId}`;
     const fetchData = await fetch(path, { mode: "cors" });
     const json = await fetchData.json();
 
@@ -87,23 +78,30 @@ export const answerByItem = async (
     };
 };
 
-export const fetchMysterySlide = async (stageId: number, problemNum: number) => {
+export const fetchMysterySlide = async (
+    stageId: number,
+    problemNum: number
+) => {
     const path = `${paths.mysterySlide}/${stageId}?problemNum=${problemNum}`;
     const fetchData = await fetch(path, { mode: "cors" });
     const json = await fetchData.json();
 
-    const { mysterySlide } = json;    
-    let blob;
-    let blobUrl = null;
-    if (mysterySlide) {
-        const bytes = new Uint8Array(mysterySlide.data);
-        blob = new Blob([bytes], { type: "image/jpeg" });
-        blobUrl = URL.createObjectURL(blob);
-    } else {
-        alert("読み込みに失敗しました");
-    }
+    const { mysterySlide } = json;
+
+    const blob = getBlob(mysterySlide.data);
 
     return {
-        mysterySlide: blobUrl,
+        mysterySlide: blob,
     };
+};
+
+export const getBlobUrl = (blob: Blob) => {    
+    return URL.createObjectURL(blob);
+};
+
+export const getBlob = (arrayBuffer: Buffer, type = "image/jpeg") => {
+    let blob;
+    const bytes = new Uint8Array(arrayBuffer);
+    blob = new Blob([bytes], { type: type });
+    return blob;
 };

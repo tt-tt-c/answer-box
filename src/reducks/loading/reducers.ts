@@ -6,13 +6,13 @@ export const loadingReducer = reducerWithInitialState(initialState.loading)
     .case(loadingActions.showLoading, (state) => {
         return {
             ...state,
-            isShowned: true,
+            isShown: true,
         };
     })
     .case(loadingActions.hideLoading, (state) => {
         return {
             ...state,
-            isShowned: false,
+            isShown: false,
         };
     })
     .default((state) => {

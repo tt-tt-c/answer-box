@@ -7,7 +7,7 @@ import { Overlay } from "../Common";
 import { path } from "../Common/Route";
 
 const Header: React.FC = () => {
-    const [isShownedDrawer, setIsShownedDrawer] = useState(false);
+    const [isShownDrawer, setIsShownDrawer] = useState(false);
 
     return (
         <Wrapper>
@@ -19,10 +19,10 @@ const Header: React.FC = () => {
                     />
                 </Link>
             </HeaderLogo>
-            <HambergerMenu type={"button"} onClick={() => setIsShownedDrawer(true)} />
+            <HambergerMenu type={"button"} onClick={() => setIsShownDrawer(true)} />
 
-            {isShownedDrawer && (<Overlay style={OverlayStyle} onClick={()=> {setIsShownedDrawer(false)}}/>)}
-            {isShownedDrawer && (<DrawerMenu closeFunc={() => setIsShownedDrawer(false)} />) }
+            {isShownDrawer && (<Overlay style={OverlayStyle} onClick={()=> {setIsShownDrawer(false)}}/>)}
+            {isShownDrawer && (<DrawerMenu closeFunc={() => setIsShownDrawer(false)} />) }
         </Wrapper>
     );
 };

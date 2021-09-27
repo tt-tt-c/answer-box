@@ -1,11 +1,12 @@
 import { Switch, Route as ReactRoute, Redirect } from "react-router-dom";
 import { Layout, StageAuth } from ".";
-import { TopPage, StagePage } from "../../templates";
+import { TopPage, StagePage, ClearPage } from "../../templates";
 
 export type StageNum = "1" | "2" | "3" | "4" | "5";
 
 export const path = {
     top: "/",
+    clear: "/clear",
     stage: "/stage",
     stage1: "/stage/1",
     stage2: "/stage/2",
@@ -32,7 +33,7 @@ const Route: React.FC = () => {
                     <ReactRoute exact path={path.top} component={TopPage} />
 
                     <ReactRoute path={`${path.stage}/:stageId([1-5])`}>
-                        {/* <StageAuth> */}
+                        <StageAuth>
                             <ReactRoute
                                 exact
                                 path={`${path.stage}/:stageId([1-5])/:pathId(${path2.storage})`}
@@ -65,7 +66,7 @@ const Route: React.FC = () => {
                             />
                             <ReactRoute
                                 exact
-                                path={`${path.stage}/:stageId([3-5])/${path2.roomX}`}
+                                path={`${path.stage}/:stageId([3-5])/:pathId(${path2.roomX})`}
                                 component={StagePage}
                             />
                             <ReactRoute
@@ -76,8 +77,9 @@ const Route: React.FC = () => {
                                     />
                                 )}
                             />
-                        {/* </StageAuth> */}
+                        </StageAuth>
                     </ReactRoute>
+                    <ReactRoute  exact path={path.clear} component={ClearPage} />
                     <Redirect to={path.top} />
                 </Switch>
             </Layout>

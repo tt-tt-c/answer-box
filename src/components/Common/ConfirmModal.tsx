@@ -11,7 +11,7 @@ type Props = {
     isOverlayClickable?: boolean;
 };
 
-export type ConfirmState = Props & { isShowned: boolean };
+export type ConfirmState = Props & { isShown: boolean };
 
 const ConfirmModal: React.FC<Props> = ({
     confirmText,

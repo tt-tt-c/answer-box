@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import styled from "styled-components";
+import { getBlobUrl } from "../../function/common";
 import { fetchMysterySlide } from "../../reducks/store/operations";
 import { getMysterySlide, getProblemNum } from "../../reducks/store/selectors";
 import { useSelector } from "../../reducks/store/store";
@@ -22,7 +23,7 @@ const SceneOfMysterySlide = () => {
         <>
             <Wrapper>
                 {mysterySlide && (
-                    <MysterySlide src={mysterySlide} alt="mystery-slide" />
+                    <MysterySlide src={getBlobUrl(mysterySlide)} alt="mystery-slide" />
                 )}
             </Wrapper>
         </>

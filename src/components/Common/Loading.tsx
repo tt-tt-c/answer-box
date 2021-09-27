@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import { Overlay } from ".";
-import { getIsShownedLoading } from "../../reducks/loading/selectors";
+import { getIsShownLoading } from "../../reducks/loading/selectors";
 import { useSelector } from "../../reducks/store/store";
 
 const Loading: React.FC = () => {
     const selector = useSelector();
-    const isShowned = getIsShownedLoading(selector.loading);
+    const isShown = getIsShownLoading(selector.loading);
 
     return (
         <>
-            {isShowned && (
+            {isShown && (
                 <>
                     <Overlay style={OverlayStyle} />
                     <LoadingAnimeWrapper>
