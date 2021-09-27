@@ -14,7 +14,7 @@ const GameLayout: React.FC = ({ children }) => {
 const MainWrapper = styled.main`
     box-sizing: border-box;
     margin: 90px 0 180px;
-    padding: 10px calc(50% - 540px) 50px;
+    padding: 10px calc(50% - 540px) 0;
     min-height: calc(100vh - 270px);
 `;
 

@@ -1,4 +1,10 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
+import {
+    createStore,
+    applyMiddleware,
+    combineReducers,
+    AnyAction,
+    CombinedState,
+} from "redux";
 import {
     connectRouter,
     routerMiddleware,
@@ -20,6 +26,11 @@ import { ModalsAlias } from "../modals/types";
 import { modalsReducer } from "../modals/reducers";
 import { Stage3Alias } from "../stage3/types";
 import { stage3Reducer } from "../stage3/reducers";
+import { Stage4Alias } from "../stage4/types";
+import { stage4Reducer } from "../stage4/reducers";
+import { Stage5Alias } from "../stage5/types";
+import { stage5Reducer } from "../stage5/reducers";
+import { PersistPartial } from "redux-persist/lib/persistReducer";
 
 export type AppState = {
     loading: LoadingAlias;
@@ -27,14 +38,27 @@ export type AppState = {
     stage1: Stage1Alias;
     stage2: Stage2Alias;
     stage3: Stage3Alias;
+    stage4: Stage4Alias;
+    stage5: Stage5Alias;
     router: RouterState;
 };
+
+type CombinedAppState = CombinedState<{
+    loading: LoadingAlias;
+    modals: ModalsAlias;
+    stage1: Stage1Alias & PersistPartial;
+    stage2: Stage2Alias & PersistPartial;
+    stage3: Stage3Alias & PersistPartial;
+    stage4: Stage4Alias & PersistPartial;
+    stage5: Stage5Alias & PersistPartial;
+    router: RouterState;
+}>;
 
 const persistConfig = {
     key: "root", // Storageに保存されるキー名を指定する
     storage, // 保存先としてlocalStorageがここで設定される
-    whitelist: ["stage1", "stage2", "stage3", "stage4", "stage5", "router"], // Stateは`todos`のみStorageに保存する
-    // blacklist: ['visibilityFilter'] // `visibilityFilter`は保存しない
+    whitelist: ["stage1", "stage2", "stage3", "stage4", "stage5"], // Stateは`todos`のみStorageに保存する
+    blacklist: ["modals", "loading"], // `visibilityFilter`は保存しない
 };
 
 export const useSelector = () => {
@@ -45,6 +69,98 @@ export const useSelector = () => {
 const logger = createLogger();
 
 export const history = createBrowserHistory();
+
+const appReducer = combineReducers({
+    loading: loadingReducer,
+    modals: modalsReducer,
+    stage1: persistReducer(
+        {
+            key: "stage1",
+            storage,
+            blacklist: [
+                "storageItems",
+                "selectedItem",
+                "inTransparentBoxItem",
+                "boxA",
+                "smile",
+                "mysterySlide",
+            ],
+        },
+        stage1Reducer
+    ),
+    stage2: persistReducer(
+        {
+            key: "stage2",
+            storage,
+            blacklist: [
+                "storageItems",
+                "selectedItem",
+                "inTransparentBoxItem",
+                "boxA",
+                "smile",
+                "mysterySlide",
+            ],
+        },
+        stage2Reducer
+    ),
+    stage3: persistReducer(
+        {
+            key: "stage3",
+            storage,
+            blacklist: [
+                "storageItems",
+                "selectedItem",
+                "inTransparentBoxItem",
+                "boxA",
+                "smile",
+                "mysterySlide",
+            ],
+        },
+        stage3Reducer
+    ),
+    stage4: persistReducer(
+        {
+            key: "stage4",
+            storage,
+            blacklist: [
+                "storageItems",
+                "selectedItem",
+                "inTransparentBoxItem",
+                "boxA",
+                "smile",
+                "mysterySlide",
+                "smallRoomItems",
+            ],
+        },
+        stage4Reducer
+    ),
+    stage5: persistReducer(
+        {
+            key: "stage5",
+            storage,
+            blacklist: [
+                "storageItems",
+                "selectedItem",
+                "inTransparentBoxItem",
+                "boxA",
+                "smile",
+                "mysterySlide",
+                "smallRoomItems",
+            ],
+        },
+        stage5Reducer
+    ),
+    router: connectRouter(history),
+});
+const rootReducer = (
+    state: CombinedAppState | undefined,
+    action: AnyAction
+) => {
+    if (action.type === "ALL_RESET") {
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
 
 export function configureStore() {
     const middlewares = [
@@ -57,51 +173,7 @@ export function configureStore() {
     const store = createStore(
         persistReducer(
             persistConfig,
-            combineReducers({
-                loading: loadingReducer,
-                modals: modalsReducer,
-                stage1: persistReducer(
-                    {
-                        key: "stage1",
-                        storage,
-                        blacklist: [
-                            "selectedItem",
-                            "storageItems",
-                            "inTransparentBoxItem",
-                            "mysterySlide",
-                        ],
-                    },
-                    stage1Reducer
-                ),
-                stage2: persistReducer(
-                    {
-                        key: "stage2",
-                        storage,
-                        blacklist: [
-                            "selectedItem",
-                            "storageItems",
-                            "inTransparentBoxItem",
-                            "mysterySlide",
-                        ],
-                    },
-                    stage2Reducer
-                ),
-                stage3: persistReducer(
-                    {
-                        key: "stage3",
-                        storage,
-                        blacklist: [
-                            "selectedItem",
-                            "storageItems",
-                            "inTransparentBoxItem",
-                            "mysterySlide",
-                            "smallRoomItems",
-                        ],
-                    },
-                    stage3Reducer
-                ),
-                router: connectRouter(history),
-            })
+            rootReducer,
         ),
         middlewareEnhancer
     );

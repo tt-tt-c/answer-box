@@ -2,23 +2,32 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import styled from "styled-components";
-import { AnswerBoxBtnModal } from ".";
+import { AnswerBoxBtnModal, TransparentBoxModal } from ".";
 import {
     answerBox_A,
     answerBox_B,
     answerBox_O,
     answerBox_X,
+    bg_06,
+    bg_07,
     icon_05,
     icon_06,
+    icon_15,
 } from "../../assets/img";
+import { getBlobUrl } from "../../function/common";
 import { loadingActions } from "../../reducks/loading/actions";
-import { answerByItem } from "../../reducks/store/operations";
-import {    
+import { stageActions } from "../../reducks/store/actions";
+import { answerByItem, sendItem } from "../../reducks/store/operations";
+import {
+    getBoxA,
+    getInTransparentBoxItem,
+    getIsSelectMode,
     getSelectedItem,
 } from "../../reducks/store/selectors";
 import { useSelector } from "../../reducks/store/store";
 import { StageNum } from "../Common/Route";
 import { AnswerButtonsModalState } from "./AnswerBoxBtnModal";
+import { inTransParentBoxState } from "./TransparentBoxModal";
 
 type Props = {
     availableBox?: {
@@ -27,6 +36,7 @@ type Props = {
         o: boolean;
         x: boolean;
     };
+    availableTransparentBox: boolean;
 };
 
 export const allAvailable = {
@@ -38,11 +48,15 @@ export const allAvailable = {
 
 const SceneOfAnswerBox: React.FC<Props> = ({
     availableBox = { ...allAvailable },
+    availableTransparentBox = false,
 }) => {
     const selector = useSelector();
     const { stageId } = useParams<{ stageId: StageNum }>();
+    const boxA = getBoxA(stageId, selector);
+    const isSelectMode = getIsSelectMode(stageId, selector);
+
     const initAnswerButtonsModalState: AnswerButtonsModalState = {
-        isShowned: false,
+        isShown: false,
         placeId: 1,
         isUsedSendButton: false,
         isOverlayClickable: true,
@@ -51,8 +65,17 @@ const SceneOfAnswerBox: React.FC<Props> = ({
         closeFunc: () => {},
     };
     const [AnswerButtonsModalState, setAnswerButtonsModalState] =
-        useState<AnswerButtonsModalState>(initAnswerButtonsModalState);    
+        useState<AnswerButtonsModalState>(initAnswerButtonsModalState);
+    const initTransParentBoxState: inTransParentBoxState = {
+        isShown: false,
+        isOverlayClickable: true,
+        doFunc: () => {},
+        closeFunc: () => {},
+    };
+    const [transparentBoxModalState, setTransparentBoxModalState] =
+        useState<inTransParentBoxState>(initTransParentBoxState);
     const selectedItem = getSelectedItem(stageId, selector);
+    const inTransparentBoxItem = getInTransparentBoxItem(stageId, selector);
     const isClickable = selectedItem !== null;
     const dispatch = useDispatch();
 
@@ -60,49 +83,135 @@ const SceneOfAnswerBox: React.FC<Props> = ({
         setAnswerButtonsModalState({ ...initAnswerButtonsModalState });
     };
 
-    const doAnswerFunc = (placeId: 1|2|3|4) => {
+    const doAnswerFunc = (placeId: 1 | 2 | 3 | 4) => {
         dispatch(loadingActions.showLoading());
         closeFunc();
         dispatch(answerByItem(stageId, placeId));
         dispatch(loadingActions.hideLoading());
     };
 
-    const answerBoxBtnClick = (placeId:1|2|3|4) => {
+    const doSendFunc = (placeId: 1 | 2 | 3 | 4) => {
+        dispatch(loadingActions.showLoading());
+        closeFunc();
+        dispatch(sendItem(stageId, placeId));
+        dispatch(loadingActions.hideLoading());
+    };
 
+    const answerBoxBtnClick = (placeId: 1 | 2 | 3 | 4) => {
         if (isClickable) {
             const modalState = {
                 ...initAnswerButtonsModalState,
             };
             modalState.placeId = placeId;
-            modalState.isShowned = true;
+            modalState.isShown = true;
+            modalState.isUsedSendButton = /[4-5]/.test(stageId);
             modalState.doAnswerFunc = () => doAnswerFunc(placeId);
+            modalState.doSendFunc = () => doSendFunc(placeId);
             modalState.closeFunc = () => closeFunc();
             setAnswerButtonsModalState(modalState);
+        }
+    };
+
+    const transparentCloseFunc = () => {
+        setTransparentBoxModalState({ ...initTransParentBoxState });
+    };
+
+    const transparentDoFunc = () => {
+        dispatch(loadingActions.showLoading());
+        transparentCloseFunc();
+        dispatch(stageActions[stageId].releaseSelectedItem());
+        if (selectedItem)
+            dispatch(
+                stageActions[stageId].updateInTransparentBoxItem({
+                    ...selectedItem,
+                })
+            );
+        dispatch(loadingActions.hideLoading());
+    };
+
+    const transparentBtnClickFunc = () => {
+        if (isClickable) {
+            const modalState = {
+                ...initTransParentBoxState,
+            };
+            modalState.isShown = true;
+            modalState.doFunc = () => transparentDoFunc();
+            modalState.closeFunc = () => transparentCloseFunc();
+            setTransparentBoxModalState(modalState);
         }
     };
 
     return (
         <>
             <Wrapper>
-                <AnswerSendButoonWrapper></AnswerSendButoonWrapper>
-                <AnswerBoxWrapper isAvailable={availableBox.a}>
-                    {availableBox.a && (
-                        <AnswerBoxButtonWrapper>
-                            <AnswerBoxButton
-                                isClickable={isClickable}
-                                onClick={() => answerBoxBtnClick(1)}
-                            >
-                                Aにいれる
-                            </AnswerBoxButton>
-                            <AnswerBoxDownIcon src={icon_05} alt="downLogo" />
-                        </AnswerBoxButtonWrapper>
-                    )}
+                {(boxA &&
+                    boxA.id !== selectedItem?.id &&
+                    boxA.id !== inTransparentBoxItem?.id)  && (
+                    <AnswerBoxWrapper isAvailable={availableBox.a}>
+                        {availableBox.a && (
+                            <AnswerBoxButtonWrapper>
+                                <AnswerBoxButton
+                                    isClickable={isClickable}
+                                    onClick={() => answerBoxBtnClick(1)}
+                                >
+                                    Aにいれる
+                                </AnswerBoxButton>
+                                <AnswerBoxDownIcon
+                                    src={icon_05}
+                                    alt="downLogo"
+                                />
+                            </AnswerBoxButtonWrapper>
+                        )}
 
-                    <AnswerBoxImg
-                        size={answerBoxImgParams.s}
-                        src={answerBox_A}
-                    />
-                </AnswerBoxWrapper>
+                        <AnswerBoxImg
+                            isSelectMode={isSelectMode}
+                            size={answerBoxImgParams.s}
+                            src={answerBox_A}
+                            onClick={() => {
+                                if (isSelectMode && boxA) {
+                                    dispatch(loadingActions.showLoading());
+                                    dispatch(
+                                        stageActions[
+                                            stageId
+                                        ].updateSelectedItem({
+                                            id: boxA.id,
+                                            name: boxA.name,
+                                            img: boxA.img,
+                                        })
+                                    );
+                                    dispatch(
+                                        stageActions[stageId].updateSeleteMode(
+                                            false
+                                        )
+                                    );
+                                    dispatch(loadingActions.hideLoading());
+                                }
+                            }}
+                        />
+                    </AnswerBoxWrapper>
+                )}
+                {(!boxA ||
+                    boxA.id === selectedItem?.id ||
+                    boxA.id === inTransparentBoxItem?.id) && (
+                    <AnswerBoxWrapper isAvailable={true}>
+                        {availableBox.a && (
+                            <AnswerBoxButtonWrapper>
+                                <AnswerBoxButton
+                                    isClickable={false}
+                                    onClick={() => {}}
+                                >
+                                    Aにいれる
+                                </AnswerBoxButton>
+                                <AnswerBoxDownIcon
+                                    src={icon_05}
+                                    alt="downLogo"
+                                />
+                            </AnswerBoxButtonWrapper>
+                        )}
+
+                        <AnswerBoxImg size={answerBoxImgParams.s} src={bg_07} />
+                    </AnswerBoxWrapper>
+                )}
                 <AnswerBoxWrapper isAvailable={availableBox.b}>
                     {availableBox.b && (
                         <AnswerBoxButtonWrapper>
@@ -154,9 +263,37 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                         src={answerBox_X}
                     />
                 </AnswerBoxWrapper>
+                <TransParentBoxWrapper
+                    isClickable={isClickable}
+                    isAvailable={availableTransparentBox}
+                >
+                    {availableTransparentBox && (
+                        <AnswerBoxButtonWrapper>
+                            <AnswerBoxButton
+                                isClickable={isClickable}
+                                onClick={() => transparentBtnClickFunc()}
+                            >
+                                容器にいれる
+                            </AnswerBoxButton>
+                            <AnswerBoxDownIcon src={icon_05} alt="downLogo" />
+                            <ItemInBox
+                                src={
+                                    inTransparentBoxItem
+                                        ? getBlobUrl(inTransparentBoxItem.img)
+                                        : ""
+                                }
+                                alt="inTransparentBoxItem"
+                            />
+                        </AnswerBoxButtonWrapper>
+                    )}
+                    <AnswerBoxImg size={answerBoxImgParams.l} src={bg_06} />
+                </TransParentBoxWrapper>
             </Wrapper>
-            {AnswerButtonsModalState.isShowned && (
+            {AnswerButtonsModalState.isShown && (
                 <AnswerBoxBtnModal {...AnswerButtonsModalState} />
+            )}
+            {transparentBoxModalState.isShown && (
+                <TransparentBoxModal {...transparentBoxModalState} />
             )}
         </>
     );
@@ -167,21 +304,15 @@ const answerBoxImgParams = {
     l: 200,
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.ul`
     display: flex;
-    justify-content: space-around;
-    flex-flow: row wrap;    
+    justify-content: space-between;
+    flex-flow: row wrap;
     height: auto;
     width: 100%;
 `;
 
-const AnswerSendButoonWrapper = styled.ul`
-    display: flex;
-    flex-flow: column-reverse nowrap;
-    justify-content: space-between;
-`;
-
-const AnswerBoxWrapper = styled.div<{ isAvailable: boolean }>`
+const AnswerBoxWrapper = styled.li<{ isAvailable: boolean }>`
     position: relative;
     display: flex;
     flex-flow: column nowrap;
@@ -197,12 +328,43 @@ const AnswerBoxWrapper = styled.div<{ isAvailable: boolean }>`
             bottom: 0;
             left: 50%;
             transform: translate(-50%, 0);
-            width: 230px;
-            height: 230px;
+            width: 210px;
+            height: 210px;
             background: center/cover url(${icon_06});
         }
     `
             : ``};
+`;
+
+const TransParentBoxWrapper = styled.li<{
+    isAvailable: boolean;
+    isClickable: boolean;
+}>`
+    position: relative;
+    display: ${({ isAvailable }) => (isAvailable ? `flex` : ` none`)};
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: ${({ isClickable }) =>
+        isClickable ? `space-between` : `flex-end`};
+    ::after {
+        content: "";
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        transform: translate(-100%, 0);
+        width: 50px;
+        height: 50px;
+        background: center/cover url(${icon_15});
+    }
+`;
+
+const ItemInBox = styled.img`
+    display: block;
+    width: 50%;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%, 0);
 `;
 
 const AnswerBoxButtonWrapper = styled.div`
@@ -214,10 +376,11 @@ const AnswerBoxButtonWrapper = styled.div`
     height: 100px;
 `;
 
-const AnswerBoxImg = styled.img<{ size: number }>`
+const AnswerBoxImg = styled.img<{ isSelectMode?: boolean; size: number }>`
     display: block;
     width: ${({ size }) => (size ? `${size}px` : `100px`)};
     height: ${({ size }) => (size ? `${size}px` : `100px`)};
+    cursor: ${({ isSelectMode }) => (isSelectMode ? `pointer` : `inherit`)}; ;
 `;
 
 const AnswerBoxButton = styled.button<{ isClickable: boolean }>`

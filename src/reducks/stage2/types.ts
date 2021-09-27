@@ -1,12 +1,12 @@
 export type SelectedItemAlias = {
     name: string;
-    img: string;
+    img: Blob;
     id: string;
 };
 
 export type ItemAlias = {
     id: string;
-    img: string;
+    img: Blob;
     name: string;
     size: "s" | "m" | "l";
 }
@@ -18,5 +18,7 @@ export type Stage2Alias = {
     isSelectMode: boolean;
     storageItems: Array<ItemAlias>;
     inTransparentBoxItem: SelectedItemAlias | null;
-    mysterySlide: null | string;
+    mysterySlide: null | Blob;
+    boxA: SelectedItemAlias | null;
+    smile: SelectedItemAlias | null;
 };

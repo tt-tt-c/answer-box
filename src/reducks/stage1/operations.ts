@@ -1,7 +1,6 @@
 import { AppDispatch } from "../..";
 import {
     getItems,
-    sendItem as sendItemFunc,
     answerByItem as answerByItemFunc,
     fetchMysterySlide as getMysterySlide,
 } from "../../function/common";
@@ -23,14 +22,16 @@ export const fetchStorageItems = () => {
         dispatch(loadingActions.showLoading());
         const problemNum = getProblemNum(state.stage1);
 
-        const { items, imageUrls, inBoxItemId, boxAId, egaoId } =
+        const { items, imageBlobs, inBoxItemId, boxAId, smileId } =
             await getItems(1, problemNum, 1);
-
+            
         const initItems: Array<ItemAlias> = [];
 
         const initialInBoxItem = getInTransparentBoxItem(state.stage1);
 
         let inBoxItem: ItemAlias | null = null;
+        let boxA: ItemAlias | null = null;
+        let smile: ItemAlias | null = null;
 
         let inTransparentBoxId = initialInBoxItem
             ? initialInBoxItem.id
@@ -39,62 +40,46 @@ export const fetchStorageItems = () => {
         for (let i = 0; i < items.length; i++) {
             if (
                 items[i].id !== boxAId &&
-                items[i].id !== egaoId &&
+                items[i].id !== smileId &&
                 items[i].id !== inTransparentBoxId
             ) {
                 initItems.push({
                     id: items[i].id.toString(),
                     name: items[i].name,
-                    img: imageUrls[i],
+                    img: imageBlobs[i],
                     size: items[i].image_size,
                 });
             }
-            if (!inBoxItem && items[i].id === inBoxItemId)
+            if (!initialInBoxItem && items[i].id === inBoxItemId)
                 inBoxItem = {
                     id: items[i].id.toString(),
                     name: items[i].name,
-                    img: imageUrls[i],
+                    img: imageBlobs[i],
                     size: items[i].size,
                 };
-        }
+            if (items[i].id === boxAId)
+                boxA = {
+                    id: items[i].id.toString(),
+                    name: items[i].name,
+                    img: imageBlobs[i],
+                    size: items[i].size,
+                };
+            if (items[i].id === smileId)
+                smile = {
+                    id: items[i].id.toString(),
+                    name: items[i].name,
+                    img: imageBlobs[i],
+                    size: items[i].size,
+                };
+        }        
 
         dispatch(stage1Actions.updateStorageItems([...initItems]));
         if (inBoxItem)
             dispatch(stage1Actions.updateInTransparentBoxItem(inBoxItem));
-        dispatch(loadingActions.hideLoading());
-    };
-};
 
-export const sendItem = (placeId: 1 | 2 | 3 | 4) => {
-    return async (dispatch: AppDispatch, getState: () => AppState) => {
-        const stage1State = getState().stage1;
-        dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(stage1State);
-        const selectedItem = getSelectedItem(stage1State);
-        const storageItems = getStorageItems(stage1State);
+        if (boxA) dispatch(stage1Actions.updateBoxA(boxA));
 
-        if (selectedItem) {
-            const { isCorrect, item, imageUrl } = await sendItemFunc(
-                1,
-                Number(selectedItem.id),
-                problemNum,
-                1,
-                placeId
-            );
-            if (isCorrect && item && imageUrl) {
-                const newStorageItems = storageItems.filter(
-                    (storageItem) => storageItem.id !== item.id
-                );
-                dispatch(
-                    stage1Actions.updateStorageItems([...newStorageItems])
-                );
-                //別の部屋のアイテムセット「3-5」
-            } else {
-                //不正解の表示
-            }
-        } else {
-            alert("アイテムを選択してください");
-        }
+        if (smile) dispatch(stage1Actions.updateSmile(smile));
         dispatch(loadingActions.hideLoading());
     };
 };
@@ -116,19 +101,19 @@ export const answerByItem = (placeId: 1 | 2 | 3 | 4) => {
                 problemNum,
                 placeId
             );
-            if(isCleared || isCorrect) {
+            if (isCleared || isCorrect) {
                 const newStorageItems = storageItems.filter(
                     (storageItem) => storageItem.id !== selectedItem.id
                 );
                 dispatch(
                     stage1Actions.updateStorageItems([...newStorageItems])
                 );
-            } 
+            }
             if (isCleared) {
                 //ステージクリアモーダル表示
                 dispatch(modalsActions.showStageClearModal());
             } else if (isCorrect) {
-                //別の部屋のアイテムセット「3-5」
+                dispatch(stage1Actions.updateProblemNum(problemNum + 1));
 
                 //正解モーダル表示
                 dispatch(modalsActions.showRightOrWrongModal(true));
@@ -149,7 +134,7 @@ export const fetchMysterySlide = () => {
         dispatch(loadingActions.showLoading());
         const problemNum = getProblemNum(stage1State);
 
-        const mysterySlide = await getMysterySlide(1, problemNum);        
+        const mysterySlide = await getMysterySlide(1, problemNum);
 
         if (mysterySlide)
             dispatch(

@@ -1,4 +1,4 @@
 import { LoadingAlias } from "./types";
 
-export const getIsShownedLoading = (loading: LoadingAlias) => loading.isShowned;
+export const getIsShownLoading = (loading: LoadingAlias) => loading.isShown;
 

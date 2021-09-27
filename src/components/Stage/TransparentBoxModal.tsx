@@ -3,40 +3,31 @@ import { useParams } from "react-router";
 import styled from "styled-components";
 import { icon_01, icon_07 } from "../../assets/img";
 import { getBlobUrl } from "../../function/common";
-import { getSelectedItem } from "../../reducks/store/selectors";
+import {
+    getInTransparentBoxItem,
+    getSelectedItem,
+} from "../../reducks/store/selectors";
 import { useSelector } from "../../reducks/store/store";
 import { Overlay } from "../Common";
 import { StageNum } from "../Common/Route";
 
 type Props = {
-    placeId: 1|2|3|4,
-    isUsedSendButton: boolean;
-    doAnswerFunc: Function;
-    doSendFunc?: Function;
+    doFunc: Function;
     closeFunc: Function;
     isOverlayClickable?: boolean;
 };
 
-export type AnswerButtonsModalState = Props & { isShown: boolean };
+export type inTransParentBoxState = Props & { isShown: boolean };
 
-const placeNames = {
-    1: "a",
-    2: "b",
-    3: "o",
-    4: "x",
-}
-
-const AnswerBoxBtnModal: React.FC<Props> = ({
-    placeId,
-    isUsedSendButton,
-    doAnswerFunc,
-    doSendFunc,
+const TransparentBoxModal: React.FC<Props> = ({
+    doFunc,
     closeFunc,
     isOverlayClickable,
 }) => {
     const selector = useSelector();
     const { stageId } = useParams<{ stageId: StageNum }>();
     const selectedItem = getSelectedItem(stageId, selector);
+    const inTransparentBoxItem = getInTransparentBoxItem(stageId, selector);
     return (
         <>
             <Overlay
@@ -50,37 +41,50 @@ const AnswerBoxBtnModal: React.FC<Props> = ({
                         closeFunc();
                     }}
                 />
-                <h3>{`Box.「${placeNames[placeId].toUpperCase()}」`}</h3>
-                <SelectedItemContainer>
-                    <p>選択中のアイテム</p>
-                    <SelectedItemFigure>
-                        <img src={selectedItem ? getBlobUrl(selectedItem.img) : ""} alt={"selectedItem"} />
-                        <figcaption>{selectedItem?.name}</figcaption>
-                    </SelectedItemFigure>
-                </SelectedItemContainer>
+                <h3>{`透明な容器`}</h3>
+                <ItemsWrapper>
+                    <SelectedItemContainer>
+                        <p>Current</p>
+                        <SelectedItemFigure>
+                            <img
+                                src={
+                                    inTransparentBoxItem
+                                        ? getBlobUrl(inTransparentBoxItem.img)
+                                        : ""
+                                }
+                                alt={"inTransparentBoxItem"}
+                            />
+                            <figcaption>
+                                {inTransparentBoxItem?.name}
+                            </figcaption>
+                        </SelectedItemFigure>
+                    </SelectedItemContainer>
+                    <IconImg src={icon_01} />
+                    <SelectedItemContainer>
+                        <p>Next</p>
+                        <SelectedItemFigure>
+                            <img
+                                src={
+                                    selectedItem
+                                        ? getBlobUrl(selectedItem.img)
+                                        : ""
+                                }
+                                alt={"selectedItem"}
+                            />
+                            <figcaption>{selectedItem?.name}</figcaption>
+                        </SelectedItemFigure>
+                    </SelectedItemContainer>
+                </ItemsWrapper>
+
                 <ButtonsWrapper>
                     <li>
-                        <AnswerButton onClick={() => doAnswerFunc()}>
+                        <AnswerButton onClick={() => doFunc()}>
                             <span></span>
                             <span>
-                                <span>解答</span>
+                                <span>入替</span>
                             </span>
                         </AnswerButton>
                     </li>
-                    {isUsedSendButton && (
-                        <li>
-                            <SendButton
-                                onClick={() => {
-                                    if (doSendFunc) doSendFunc();
-                                }}
-                            >
-                                <span></span>
-                                <span>
-                                    <span>送信</span>
-                                </span>
-                            </SendButton>
-                        </li>
-                    )}
                 </ButtonsWrapper>
             </ModalWrapper>
         </>
@@ -133,35 +137,36 @@ const ModalWrapper = styled.div`
     }
 `;
 
-const SelectedItemContainer = styled.div`
+const ItemsWrapper = styled.ul`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+`;
+
+const IconImg = styled.img`
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin-top: 40px;
+`;
+
+const SelectedItemContainer = styled.li`
     box-sizing: border-box;
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
     width: 100%;
     max-width: 400px;
-    margin: 0 auto;    
+    margin: 0 auto;
     > p {
         color: #000;
         font-size: 16px;
         font-weight: 600;
         line-height: 1.6;
         position: relative;
-        margin-right: 60px;
-        border: 5px solid #CCC;
         padding: 10px;
-    }
-    > p::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        right: -50px;
-        transform: translateY(-50%);
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        background: center/30px 30px url(${icon_01}) no-repeat;
     }
 `;
 const SelectedItemFigure = styled.figure`
@@ -312,4 +317,4 @@ const SendButton = styled(BaseButton)`
     }
 `;
 
-export default AnswerBoxBtnModal;
+export default TransparentBoxModal;

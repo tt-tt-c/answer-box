@@ -2,15 +2,15 @@ import { AppState } from "./store";
 
 export const initialState: Omit<AppState, "router"> = {
     loading: {
-        isShowned: false,
+        isShown: false,
     },
     modals: {
         stageClearModal: {
-            isShowned: false,
+            isShown: false,
         },
         rightOrWrongModal: {
             isCorrect: false,
-            isShowned: false,
+            isShown: false,
         }
     },
     stage1: {
@@ -21,6 +21,8 @@ export const initialState: Omit<AppState, "router"> = {
         storageItems: [],
         inTransparentBoxItem: null,
         mysterySlide: null,
+        boxA: null,
+        smile:null,
     },
     stage2: {
         isCleared: false,
@@ -30,6 +32,8 @@ export const initialState: Omit<AppState, "router"> = {
         storageItems: [],
         inTransparentBoxItem: null,
         mysterySlide: null,
+        boxA: null,
+        smile:null,
     },
     stage3: {
         isCleared: false,
@@ -40,6 +44,34 @@ export const initialState: Omit<AppState, "router"> = {
         storageItems: [],
         inTransparentBoxItem: null,
         mysterySlide: null,
+        boxA: null,
+        smile:null,
+        smallRoomItems: null,
+    },
+    stage4: {
+        isCleared: false,
+        problemNum: 1,
+        processNum: 1,
+        isSelectMode: false,
+        selectedItem: null,
+        storageItems: [],
+        inTransparentBoxItem: null,
+        mysterySlide: null,
+        boxA: null,
+        smile:null,
+        smallRoomItems: null,
+    },
+    stage5: {
+        isCleared: false,
+        problemNum: 1,
+        processNum: 1,
+        isSelectMode: false,
+        selectedItem: null,
+        storageItems: [],
+        inTransparentBoxItem: null,
+        mysterySlide: null,
+        boxA: null,
+        smile:null,
         smallRoomItems: null,
     },
 };

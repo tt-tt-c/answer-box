@@ -6,7 +6,7 @@ type Props = {
         [key: string]: string;
     };
     onClick?: Function;
-    isShowned?: boolean;
+    isShown?: boolean;
 };
 
 const OverlayStyle = {
@@ -19,10 +19,10 @@ const OverlayStyle = {
  *Styleでbackground, z-index等の指定が必要
  *
  */
-const Overlay: React.FC<Props> = ({ style=OverlayStyle, onClick, isShowned = true, children }) => {
+const Overlay: React.FC<Props> = ({ style=OverlayStyle, onClick, isShown = true, children }) => {
     return (
         <>
-            {isShowned && (
+            {isShown && (
                 <Wrapper
                     style={style}
                     onClick={() => {

@@ -34,7 +34,7 @@ const CleaModal = () => {
     const { stageId } = useParams<{ stageId: StageNum }>();
     const stageAction = stageActions[stageId];
     const clearModalState = getStageClearModalState(selector.modals);
-    const isShowned = clearModalState.isShowned;
+    const isShown = clearModalState.isShown;
     const dispatch = useDispatch();
     const stageIcon = stageIcons[stageId];
     const nextPath = {
@@ -42,12 +42,12 @@ const CleaModal = () => {
         2: "/stage/3",
         3: "/stage/4",
         4: "/stage/5",
-        5: "/clear",
+        5: "/game-clear",
     };
 
     return (
         <>
-            {isShowned && (
+            {isShown && (
                 <>
                     <Overlay style={OverlayStyle} />
                     <ModalWrapper>

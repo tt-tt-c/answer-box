@@ -12,6 +12,7 @@ import { useParams } from "react-router";
 import { stageActions } from "../../reducks/store/actions";
 import { StageNum } from "../Common/Route";
 import { loadingActions } from "../../reducks/loading/actions";
+import { getBlobUrl } from "../../function/common";
 
 const Footer = () => {
     const selector = useSelector();
@@ -20,7 +21,7 @@ const Footer = () => {
     const selectedItem = getSelectedItem(stageId, selector);
     const dispatch = useDispatch();
     const initConfirmState = {
-        isShowned: false,
+        isShown: false,
         confirmText: "",
         doFunc: () => {},
         closeFunc: () => {},
@@ -39,7 +40,7 @@ const Footer = () => {
                                 {selectedItem && (
                                     <SelectedThingImg
                                         key={`selectedItem${selectedItem.id}`}
-                                        src={selectedItem.img}
+                                        src={getBlobUrl(selectedItem.img)}
                                         alt={selectedItem.name}
                                     />
                                 )}
@@ -53,7 +54,7 @@ const Footer = () => {
                                     boxShadowColor={"#FFFFFF"}
                                     onClick={() => {
                                         setConfirmModalState({
-                                            isShowned: true,
+                                            isShown: true,
                                             confirmText:
                                                 "選択中の物をリリースしますか？",
                                             doFunc: () => {
@@ -106,7 +107,7 @@ const Footer = () => {
                     </MenuWrapper>
                 </footer>
             </Wrapper>
-            {confirmModalState.isShowned && (
+            {confirmModalState.isShown && (
                 <ConfirmModal {...confirmModalState} />
             )}
         </>

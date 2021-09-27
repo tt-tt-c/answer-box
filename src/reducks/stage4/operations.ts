@@ -8,13 +8,12 @@ import {
 import { loadingActions } from "../loading/actions";
 import { modalsActions } from "../modals/actions";
 import { AppState } from "../store/store";
-import { stage3Actions } from "./actions";
+import { stage4Actions } from "./actions";
 import {
     getInTransparentBoxItem,
     getProblemNum,
     getProcessNum,
-    getSelectedItem,
-    getStorageItems,
+    getSelectedItem,    
 } from "./selectors";
 import { ItemAlias } from "./types";
 
@@ -22,14 +21,14 @@ export const fetchStorageItems = () => {
     return async (dispatch: AppDispatch, getState: () => AppState) => {
         const state = getState();
         dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(state.stage3);
+        const problemNum = getProblemNum(state.stage4);
 
         const { items, imageBlobs, inBoxItemId, boxAId, smileId } =
-            await getItems(3, problemNum, 1);
+            await getItems(4, problemNum, 1);
 
         const initItems: Array<ItemAlias> = [];
 
-        const initialInBoxItem = getInTransparentBoxItem(state.stage3);
+        const initialInBoxItem = getInTransparentBoxItem(state.stage4);
 
         let inBoxItem: ItemAlias | null = null;
         let boxA: ItemAlias | null = null;
@@ -75,11 +74,11 @@ export const fetchStorageItems = () => {
                 };
         }
 
-        dispatch(stage3Actions.updateStorageItems([...initItems]));
+        dispatch(stage4Actions.updateStorageItems([...initItems]));
         if (inBoxItem)
-            dispatch(stage3Actions.updateInTransparentBoxItem(inBoxItem));
-        if (boxA) dispatch(stage3Actions.updateBoxA(boxA));
-        if (smile) dispatch(stage3Actions.updateSmile(smile));
+            dispatch(stage4Actions.updateInTransparentBoxItem(inBoxItem));
+        if (boxA) dispatch(stage4Actions.updateBoxA(boxA));
+        if (smile) dispatch(stage4Actions.updateSmile(smile));
         dispatch(loadingActions.hideLoading());
     };
 };
@@ -88,11 +87,11 @@ export const fetchSmallRoomItems = (placeId: 1|2|3|4) => {
     return async (dispatch: AppDispatch, getState: () => AppState) => {
         const state = getState();
         dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(state.stage3);
-        const processNum = getProcessNum(state.stage3);
+        const problemNum = getProblemNum(state.stage4);
+        const processNum = getProcessNum(state.stage4);
 
         const { items, imageBlobs } =
-            await getItems(3, problemNum, processNum, placeId);
+            await getItems(4, problemNum, processNum, placeId);
 
         const initItems: Array<ItemAlias> = [];
 
@@ -106,11 +105,43 @@ export const fetchSmallRoomItems = (placeId: 1|2|3|4) => {
                 });
         }
 
-        let smallRoomItems = {...state.stage3.smallRoomItems}
+        let smallRoomItems = {...state.stage4.smallRoomItems}
         smallRoomItems[placeId] = [...initItems]
 
-        dispatch(stage3Actions.updateSmallRoomItems({...smallRoomItems}));
+        dispatch(stage4Actions.updateSmallRoomItems({...smallRoomItems}));
 
+        dispatch(loadingActions.hideLoading());
+    };
+};
+
+export const sendItem = (placeId: 1 | 2 | 3 | 4) => {
+    return async (dispatch: AppDispatch, getState: () => AppState) => {
+        const stage4State = getState().stage4;
+        dispatch(loadingActions.showLoading());
+        const problemNum = getProblemNum(stage4State);
+        const processNum = getProcessNum(stage4State);
+        const inBoxItem = getInTransparentBoxItem(stage4State);
+        const selectedItem = getSelectedItem(stage4State);
+
+        if (selectedItem) {
+            const { isCorrect } = await sendItemFunc(
+                4,
+                Number(selectedItem.id),
+                problemNum,
+                processNum,
+                placeId,
+                Number(inBoxItem?.id),
+            );
+            if (isCorrect) {
+                dispatch(stage4Actions.updateProcessNum(processNum+1));
+                dispatch(modalsActions.showRightOrWrongModal(true));
+            } else {
+                //不正解の表示
+                dispatch(modalsActions.showRightOrWrongModal(false));
+            }
+        } else {
+            alert("アイテムを選択してください");
+        }
         dispatch(loadingActions.hideLoading());
     };
 };
@@ -118,37 +149,26 @@ export const fetchSmallRoomItems = (placeId: 1|2|3|4) => {
 //answerByItem(モノで解答、正誤判定)
 export const answerByItem = (placeId: 1 | 2 | 3 | 4) => {
     return async (dispatch: AppDispatch, getState: () => AppState) => {
-        const stage3State = getState().stage3;
+        const stage4State = getState().stage4;
         dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(stage3State);
-        const selectedItem = getSelectedItem(stage3State);
-        const storageItems = getStorageItems(stage3State);
-        dispatch(stage3Actions.releaseSelectedItem());
-
-        console.log("stage3 answer")
+        const problemNum = getProblemNum(stage4State);
+        const selectedItem = getSelectedItem(stage4State);
+        dispatch(stage4Actions.releaseSelectedItem());
 
         if (selectedItem) {
             const { isCorrect, isCleared } = await answerByItemFunc(
-                3,
+                4,
                 Number(selectedItem.id),
                 problemNum,
                 placeId
             );
-            if(isCleared || isCorrect) {
-                const newStorageItems = storageItems.filter(
-                    (storageItem) => storageItem.id !== selectedItem.id
-                );
-                dispatch(
-                    stage3Actions.updateStorageItems([...newStorageItems])
-                );
-            } 
             if (isCleared) {
                 //ステージクリアモーダル表示
                 dispatch(modalsActions.showStageClearModal());
             } else if (isCorrect) {
-                //別の部屋のアイテムセット「3-5」
-                dispatch(stage3Actions.updateProblemNum(problemNum+1));                           
-                dispatch(stage3Actions.updateProcessNum(1));                           
+                //別の部屋のアイテムセット「4-5」
+                dispatch(stage4Actions.updateProblemNum(problemNum+1));                           
+                dispatch(stage4Actions.updateProcessNum(1));                           
 
                 //正解モーダル表示
                 dispatch(modalsActions.showRightOrWrongModal(true));
@@ -165,15 +185,15 @@ export const answerByItem = (placeId: 1 | 2 | 3 | 4) => {
 
 export const fetchMysterySlide = () => {
     return async (dispatch: AppDispatch, getState: () => AppState) => {
-        const stage3State = getState().stage3;
+        const stage4State = getState().stage4;
         dispatch(loadingActions.showLoading());
-        const problemNum = getProblemNum(stage3State);
+        const problemNum = getProblemNum(stage4State);
 
-        const mysterySlide = await getMysterySlide(3, problemNum);        
+        const mysterySlide = await getMysterySlide(4, problemNum);        
 
         if (mysterySlide)
             dispatch(
-                stage3Actions.updateMysterySlide(mysterySlide.mysterySlide)
+                stage4Actions.updateMysterySlide(mysterySlide.mysterySlide)
             );
         dispatch(loadingActions.hideLoading());
     };

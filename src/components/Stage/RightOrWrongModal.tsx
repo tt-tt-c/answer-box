@@ -10,21 +10,19 @@ import { StageNum } from "../Common/Route";
 import { icon_01, icon_02, icon_08, icon_09 } from "../../assets/img";
 import { loadingActions } from "../../reducks/loading/actions";
 import { stageActions } from "../../reducks/store/actions";
-import { getProblemNum } from "../../reducks/store/selectors";
 
 const RightOrWrongModal = () => {
     const selector = useSelector();
     const { stageId } = useParams<{ stageId: StageNum }>();
-    const problemNum = getProblemNum(stageId, selector);
     const rightOrWrongModal = getRightOrWrongModalState(selector.modals);
-    const isShowned = rightOrWrongModal.isShowned;
+    const isShown = rightOrWrongModal.isShown;
     const isCorrect = rightOrWrongModal.isCorrect;
     const stageAction = stageActions[stageId];
     const dispatch = useDispatch();
 
     return (
         <>
-            {isShowned && (
+            {isShown && (
                 <>
                     <Overlay />
                     <ModalWrapper>
@@ -33,8 +31,7 @@ const RightOrWrongModal = () => {
                             onClick={() => {                                
                                 dispatch(loadingActions.showLoading());
                                 dispatch(modalsActions.hideRightOrWrongModal());
-                                dispatch(stageAction.releaseSelectedItem());
-                                if(isCorrect) dispatch(stageAction.updateProblemNum(problemNum+1));                             
+                                dispatch(stageAction.releaseSelectedItem());                                
                                 dispatch(loadingActions.hideLoading());
                             }}
                         >
