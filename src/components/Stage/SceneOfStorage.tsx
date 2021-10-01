@@ -14,6 +14,10 @@ import { useDispatch } from "react-redux";
 import { stageActions } from "../../reducks/store/actions";
 import { loadingActions } from "../../reducks/loading/actions";
 import { getBlobUrl } from "../../function/common";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwipeCore, { Pagination, Navigation } from "swiper";
+import "swiper/swiper.scss";
+SwipeCore.use([Pagination, Navigation]);
 
 const SceneOfStorage = () => {
     const selector = useSelector();
@@ -35,79 +39,91 @@ const SceneOfStorage = () => {
             ((selectedItem && storageItems[i].id === selectedItem.id) ||
                 (inTransparentBoxItem &&
                     storageItems[i].id === inTransparentBoxItem.id))
-        ) continue;
-            itemElms.push(
-                <DeskWrapper key={`storageItemWrapper${i}`}>
-                    {pickItems.map((item, index: number) => {
-                        if (
-                            (!selectedItem || item.id !== selectedItem.id) &&
-                            (!inTransparentBoxItem ||
-                                item.id !== inTransparentBoxItem.id)
-                        ) {
-                            return (
-                                <Item
-                                    key={`storageItem${item.id}${i + index}`}
-                                    src={(item && item.img instanceof Blob) ? getBlobUrl(item.img) : ""}
-                                    width={itemSizeParams[item.size]}
-                                    height={itemSizeParams[item.size]}
-                                    itemNum={index % 5}
-                                    isSelectMode={isSelectMode}
-                                    onClick={() => {
-                                        if (isSelectMode) {
-                                            dispatch(
-                                                loadingActions.showLoading()
-                                            );
-                                            const storageItem =
-                                                storageItems[i + index];
-                                            dispatch(
-                                                stageActions[
-                                                    stageId
-                                                ].updateSelectedItem({
-                                                    id: storageItem.id,
-                                                    name: storageItem.name,
-                                                    img: storageItem.img,
-                                                })
-                                            );
-                                            dispatch(
-                                                stageActions[
-                                                    stageId
-                                                ].updateSeleteMode(false)
-                                            );
-                                            dispatch(
-                                                loadingActions.hideLoading()
-                                            );
-                                        }
-                                    }}
-                                />
-                            );
-                        } else if (
-                            selectedItem &&
-                            item.id === selectedItem.id
-                        ) {
-                            return (
-                                <SelectedItem
-                                    key={`storageItem${item.id}${index}`}
-                                    width={itemSizeParams[item.size]}
-                                    height={itemSizeParams[item.size]}
-                                    itemNum={index % 5}
-                                />
-                            );
-                        } else {
-                            return (
-                                <InBoxItem
-                                    key={`storageItem${item.id}${index}`}
-                                    width={itemSizeParams[item.size]}
-                                    height={itemSizeParams[item.size]}
-                                    itemNum={index % 5}
-                                />
-                            );
-                        }
-                    })}
-                </DeskWrapper>
-            );
+        )
+            continue;
+        itemElms.push(
+            <DeskWrapper key={`storageItemWrapper${i}`}>
+                {pickItems.map((item, index: number) => {
+                    if (
+                        (!selectedItem || item.id !== selectedItem.id) &&
+                        (!inTransparentBoxItem ||
+                            item.id !== inTransparentBoxItem.id)
+                    ) {
+                        return (
+                            <Item
+                                key={`storageItem${item.id}${i + index}`}
+                                src={
+                                    item && item.img instanceof Blob
+                                        ? getBlobUrl(item.img)
+                                        : ""
+                                }
+                                width={itemSizeParams[item.size]}
+                                height={itemSizeParams[item.size]}
+                                itemNum={index % 5}
+                                isSelectMode={isSelectMode}
+                                onClick={() => {
+                                    if (isSelectMode) {
+                                        dispatch(loadingActions.showLoading());
+                                        const storageItem =
+                                            storageItems[i + index];
+                                        dispatch(
+                                            stageActions[
+                                                stageId
+                                            ].updateSelectedItem({
+                                                id: storageItem.id,
+                                                name: storageItem.name,
+                                                img: storageItem.img,
+                                            })
+                                        );
+                                        dispatch(
+                                            stageActions[
+                                                stageId
+                                            ].updateSeleteMode(false)
+                                        );
+                                        dispatch(loadingActions.hideLoading());
+                                    }
+                                }}
+                            />
+                        );
+                    } else if (selectedItem && item.id === selectedItem.id) {
+                        return (
+                            <SelectedItem
+                                key={`storageItem${item.id}${index}`}
+                                width={itemSizeParams[item.size]}
+                                height={itemSizeParams[item.size]}
+                                itemNum={index % 5}
+                            />
+                        );
+                    } else {
+                        return (
+                            <InBoxItem
+                                key={`storageItem${item.id}${index}`}
+                                width={itemSizeParams[item.size]}
+                                height={itemSizeParams[item.size]}
+                                itemNum={index % 5}
+                            />
+                        );
+                    }
+                })}
+            </DeskWrapper>
+        );
     }
 
-    return <Wrapper>{itemElms}</Wrapper>;
+    return (
+        <>
+            <Wrapper>
+                <Swiper
+                    spaceBetween={1}
+                    slidesPerView={1}
+                    pagination={{ clickable: true }}
+                >
+                    {itemElms.map((itemElm) => {
+                        return <SwiperSlide>{itemElm}</SwiperSlide>;
+                    })}
+                </Swiper>
+            </Wrapper>
+        </>
+    );
 };
 
 const Wrapper = styled.div`
@@ -116,10 +132,11 @@ const Wrapper = styled.div`
     flex-flow: column wrap;
     height: auto;
     width: 100%;
+    overflow-x: hidden;
 `;
 
 const deskWidth = 1000;
-const deskHeight = 442;
+const deskHeight = 420;
 
 const DeskWrapper = styled.div`
     position: relative;
