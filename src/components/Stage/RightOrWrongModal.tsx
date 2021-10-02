@@ -6,10 +6,11 @@ import { modalsActions } from "../../reducks/modals/actions";
 import { getRightOrWrongModalState } from "../../reducks/modals/selectors";
 import { useSelector } from "../../reducks/store/store";
 import { Overlay } from "../Common";
-import { StageNum } from "../Common/Route";
+import { path, path2, StageNum } from "../Common/Route";
 import { icon_01, icon_02, icon_08, icon_09 } from "../../assets/img";
 import { loadingActions } from "../../reducks/loading/actions";
 import { stageActions } from "../../reducks/store/actions";
+import { push } from "connected-react-router";
 
 const RightOrWrongModal = () => {
     const selector = useSelector();
@@ -31,7 +32,8 @@ const RightOrWrongModal = () => {
                             onClick={() => {                                
                                 dispatch(loadingActions.showLoading());
                                 dispatch(modalsActions.hideRightOrWrongModal());
-                                dispatch(stageAction.releaseSelectedItem());                                
+                                dispatch(stageAction.releaseSelectedItem());
+                                if(isCorrect) dispatch(push(`${path[`stage${stageId}`]}/${path2.mysterySlide}`));
                                 dispatch(loadingActions.hideLoading());
                             }}
                         >
@@ -125,6 +127,9 @@ const NextButton = styled.button`
     border: 1px solid #FFF;
     color: #fff;
     min-width: 400px;
+    animation: show 2s ease 1s 1 alternate forwards running;
+    opacity: 0;
+    visibility: hidden;
 
     span {
         position: relative;
@@ -173,5 +178,16 @@ const NextButton = styled.button`
     }
     :hover i:before {
         background-image: url(${icon_01});
+    }
+
+    @keyframes show {
+        0% {
+            opacity: 0;
+            visibility: hidden;
+        }
+        100% {
+            opacity: 1;
+            visibility: visible;
+        }
     }
 `;

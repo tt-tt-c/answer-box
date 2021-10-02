@@ -302,19 +302,4 @@ const AnswerButton = styled(BaseButton)`
     }
 `;
 
-const SendButton = styled(BaseButton)`
-    > span:last-child {
-        position: absolute;
-        background: #006b3e;
-    }
-
-    > span:last-child:before {
-        background: #009d5b;
-    }
-
-    > span:last-child span {
-        color: #fff;
-    }
-`;
-
 export default TransparentBoxModal;

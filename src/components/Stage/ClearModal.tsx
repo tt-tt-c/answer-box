@@ -42,7 +42,7 @@ const CleaModal = () => {
         2: "/stage/3",
         3: "/stage/4",
         4: "/stage/5",
-        5: "/game-clear",
+        5: "/clear",
     };
 
     return (
@@ -158,6 +158,9 @@ const NextButton = styled.button`
     color: #fff;
     min-width: 400px;
     margin-top: 50px;
+    animation: show 2s ease 1s 1 alternate forwards running;
+    opacity: 0;
+    visibility: hidden;
 
     span {
         position: relative;
@@ -208,5 +211,16 @@ const NextButton = styled.button`
     }
     :hover i:before {
         background-image: url(${icon_01});
+    }
+
+    @keyframes show {
+        0% {
+            opacity: 0;
+            visibility: hidden;
+        }
+        100% {
+            opacity: 1;
+            visibility: visible;
+        }
     }
 `;

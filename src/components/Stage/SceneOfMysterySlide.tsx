@@ -40,7 +40,7 @@ const Wrapper = styled.div`
 
 const MysterySlide = styled.img`
     display: block;
-    width: 800px;
+    width: 710px;
 `;
 
 export default SceneOfMysterySlide;

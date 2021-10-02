@@ -75,6 +75,12 @@ export const stage5Reducer = reducerWithInitialState(initialState.stage5)
             smile: {...smile},
         };
     })
+    .case(stage5Actions.stage5Reset, (state) => {        
+        return { 
+            ...state,
+            ...initialState.stage2,
+        }
+    })
     .default((state) => {
         return { ...state };
     });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import { useSelector } from "../../reducks/store/store";
 import styled from "styled-components";
@@ -6,6 +6,8 @@ import { bg_02 } from "../../assets/img";
 import {
     getInTransparentBoxItem,
     getIsSelectMode,
+    getProblemNum,
+    getProcessNum,
     getSelectedItem,
     getStorageItems,
 } from "../../reducks/store/selectors";
@@ -17,16 +19,23 @@ import { getBlobUrl } from "../../function/common";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwipeCore, { Pagination, Navigation } from "swiper";
 import "swiper/swiper.scss";
+import { fetchStorageItems } from "../../reducks/store/operations";
 SwipeCore.use([Pagination, Navigation]);
 
 const SceneOfStorage = () => {
     const selector = useSelector();
     const { stageId } = useParams<{ stageId: StageNum }>();
+    const problemNum = getProblemNum(stageId, selector);
+    const processNum = getProcessNum(stageId, selector);
     const storageItems = getStorageItems(stageId, selector);
     const isSelectMode = getIsSelectMode(stageId, selector);
     const selectedItem = getSelectedItem(stageId, selector);
     const inTransparentBoxItem = getInTransparentBoxItem(stageId, selector);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchStorageItems(stageId));
+    }, [dispatch,stageId, problemNum, processNum])
 
     const itemElms = [];
     for (let i = 0; i < storageItems.length; i += 5) {
@@ -41,6 +50,7 @@ const SceneOfStorage = () => {
                     storageItems[i].id === inTransparentBoxItem.id))
         )
             continue;
+        
         itemElms.push(
             <DeskWrapper key={`storageItemWrapper${i}`}>
                 {pickItems.map((item, index: number) => {
@@ -112,7 +122,7 @@ const SceneOfStorage = () => {
     return (
         <>
             <Wrapper>
-                <Swiper
+                {/* <Swiper
                     spaceBetween={1}
                     slidesPerView={1}
                     pagination={{ clickable: true }}
@@ -120,7 +130,8 @@ const SceneOfStorage = () => {
                     {itemElms.map((itemElm) => {
                         return <SwiperSlide>{itemElm}</SwiperSlide>;
                     })}
-                </Swiper>
+                </Swiper> */}
+                {itemElms}
             </Wrapper>
         </>
     );

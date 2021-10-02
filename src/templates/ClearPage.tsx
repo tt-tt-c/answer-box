@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { path } from "../components/Common/Route";
-import { Subtitle, Title, DescText, Link01 } from "../components/Common";
+import { Title, Link01 } from "../components/Common";
 import { useDispatch } from "react-redux";
 import { resetActions } from "../reducks/store/actions";
 
@@ -36,10 +36,6 @@ const Wrapper = styled.section`
     min-height: 100vh; 
     padding: 50px calc(50% - 540px) 100px;
     text-align: center;
-`;
-
-const Container = styled.div`
-    margin-top: 80px;
 `;
 
 const LinkStyle = {
