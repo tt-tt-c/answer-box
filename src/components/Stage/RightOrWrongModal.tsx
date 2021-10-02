@@ -127,7 +127,7 @@ const NextButton = styled.button`
     border: 1px solid #FFF;
     color: #fff;
     min-width: 400px;
-    animation: show 2s ease 1s 1 alternate forwards running;
+    animation: show 2s ease 0.5s 1 alternate forwards running;
     opacity: 0;
     visibility: hidden;
 

@@ -14,5 +14,5 @@ export const stage1Actions = {
     updateMysterySlide: actionCreator<Blob | null>("UPDATE_MYSTERY_SLIDE_OF_1"),
     updateBoxA: actionCreator<SelectedItemAlias>("UPDATE_BOX_A_OF_1"),
     updateSmile: actionCreator<SelectedItemAlias>("UPDATE_SMILE_OF_1"),
-    stage1Reset: actionCreator("STAGE1_RESET"),
+    stageReset: actionCreator("STAGE1_RESET"),
 };

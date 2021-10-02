@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import { useSelector } from "../../reducks/store/store";
 import styled from "styled-components";
-import { bg_02 } from "../../assets/img";
+import { bg_02, icon_17 } from "../../assets/img";
 import {
     getInTransparentBoxItem,
     getIsSelectMode,
@@ -18,7 +18,8 @@ import { loadingActions } from "../../reducks/loading/actions";
 import { getBlobUrl } from "../../function/common";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwipeCore, { Pagination, Navigation } from "swiper";
-import "swiper/swiper.scss";
+import "swiper/swiper-bundle.min.css";
+import "swiper/swiper.min.css";
 import { fetchStorageItems } from "../../reducks/store/operations";
 SwipeCore.use([Pagination, Navigation]);
 
@@ -35,7 +36,7 @@ const SceneOfStorage = () => {
 
     useEffect(() => {
         dispatch(fetchStorageItems(stageId));
-    }, [dispatch,stageId, problemNum, processNum])
+    }, [dispatch, stageId, problemNum, processNum]);
 
     const itemElms = [];
     for (let i = 0; i < storageItems.length; i += 5) {
@@ -50,7 +51,7 @@ const SceneOfStorage = () => {
                     storageItems[i].id === inTransparentBoxItem.id))
         )
             continue;
-        
+
         itemElms.push(
             <DeskWrapper key={`storageItemWrapper${i}`}>
                 {pickItems.map((item, index: number) => {
@@ -119,19 +120,41 @@ const SceneOfStorage = () => {
         );
     }
 
+    const params = {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    };
     return (
         <>
             <Wrapper>
-                {/* <Swiper
-                    spaceBetween={1}
+                <Swiper
+                    {...params}
+                    spaceBetween={20}
                     slidesPerView={1}
                     pagination={{ clickable: true }}
+                    navigation={itemElms.length > 1}
+                    loop={true}
                 >
-                    {itemElms.map((itemElm) => {
-                        return <SwiperSlide>{itemElm}</SwiperSlide>;
+                    {itemElms.map((itemElm, index) => {
+                        return (
+                            <SwiperSlide key={`swiperSlide${index}`}>
+                                {itemElm}
+                            </SwiperSlide>
+                        );
                     })}
-                </Swiper> */}
-                {itemElms}
+                </Swiper>
             </Wrapper>
         </>
     );
@@ -144,10 +167,44 @@ const Wrapper = styled.div`
     height: auto;
     width: 100%;
     overflow-x: hidden;
+    padding: 30px 0 0;
+    .swiper-container {
+        max-width: 1000px;
+        overflow: hidden;
+        padding-bottom: 10px;
+    }
+    .swiper-pagination {
+        bottom: 0px;
+    }
+    .swiper-pagination-bullet {
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+    .swiper-button-prev,
+    .swiper-button-next {
+        width: 48px; /* ボタンの幅 */
+        height: 48px; /* ボタンの高さ */
+        background-size: 48px 48px; /* 背景画像としてのサイズ（＝表示したい画像サイズ） */
+        margin-top: -24px; /* 縦中央配置用：ボタンの高さの半分のネガティブマージン（top:50%がすでに設定されている） */
+    }
+    /* 次ページボタンのスタイル */
+    .swiper-button-next {
+        background-image: url(${icon_17});
+        transform: scale(-1, 1); /* 左右反転 */
+    }
+    /* 前ページボタンのスタイル */
+    .swiper-button-prev {
+        background-image: url(${icon_17});
+    }
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        content: "";
+    }
 `;
 
 const deskWidth = 1000;
-const deskHeight = 420;
+const deskHeight = 380;
 
 const DeskWrapper = styled.div`
     position: relative;

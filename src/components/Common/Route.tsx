@@ -5,14 +5,14 @@ import { TopPage, StagePage, ClearPage } from "../../templates";
 export type StageNum = "1" | "2" | "3" | "4" | "5";
 
 export const path = {
-    top: "/",
-    clear: "/clear",
+    top: "/",    
     stage: "/stage",
     stage1: "/stage/1",
     stage2: "/stage/2",
     stage3: "/stage/3",
     stage4: "/stage/4",
     stage5: "/stage/5",
+    clear: "/stage/clear",
 };
 
 export const path2 = {
@@ -33,7 +33,7 @@ const Route: React.FC = () => {
                     <ReactRoute exact path={path.top} component={TopPage} />
 
                     <ReactRoute path={`${path.stage}/:stageId([1-5])`}>
-                        <StageAuth>
+                        {/* <StageAuth> */}
                             <ReactRoute
                                 exact
                                 path={`${path.stage}/:stageId([1-5])/:pathId(${path2.storage})`}
@@ -77,7 +77,7 @@ const Route: React.FC = () => {
                                     />
                                 )}
                             />
-                        </StageAuth>
+                        {/* </StageAuth> */}
                     </ReactRoute>
                     <ReactRoute  exact path={path.clear} component={ClearPage} />
                     <Redirect to={path.top} />

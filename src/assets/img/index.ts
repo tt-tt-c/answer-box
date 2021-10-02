@@ -26,6 +26,8 @@ import icon_img_12 from './icon_12.png'
 import icon_img_13 from './icon_13.png'
 import icon_img_14 from './icon_14.png'
 import icon_img_15 from './icon_15.png'
+import icon_img_16 from './icon_16.png'
+import icon_img_17 from './icon_17.png'
 
 //anserBox
 import answerBox_img_A from './answer-box_01.png'
@@ -62,6 +64,8 @@ export const icon_12 = icon_img_12;
 export const icon_13 = icon_img_13;
 export const icon_14 = icon_img_14;
 export const icon_15 = icon_img_15;
+export const icon_16 = icon_img_16;
+export const icon_17 = icon_img_17;
 
 //answerBox
 export const answerBox_A = answerBox_img_A;

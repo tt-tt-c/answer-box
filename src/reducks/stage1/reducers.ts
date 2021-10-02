@@ -63,7 +63,7 @@ export const stage1Reducer = reducerWithInitialState(initialState.stage1)
             smile: {...smile},
         };
     })
-    .case(stage1Actions.stage1Reset, (state) => {        
+    .case(stage1Actions.stageReset, (state) => {        
         return { 
             ...state,
             ...initialState.stage1,

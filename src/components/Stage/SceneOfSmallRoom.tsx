@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import { useSelector } from "../../reducks/store/store";
 import styled from "styled-components";
-import { bg_05 } from "../../assets/img";
+import { bg_05, icon_17 } from "../../assets/img";
 import {
     getInTransparentBoxItem,
     getIsSelectMode,
@@ -17,6 +17,11 @@ import { fetchSmallRoomItems } from "../../reducks/store/operations";
 import { stageActions } from "../../reducks/store/actions";
 import { loadingActions } from "../../reducks/loading/actions";
 import { getBlobUrl } from "../../function/common";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwipeCore, { Pagination, Navigation } from "swiper";
+import "swiper/swiper-bundle.min.css";
+import "swiper/swiper.min.css";
+SwipeCore.use([Pagination, Navigation]);
 
 type Props = {
     placeId: 1 | 2 | 3 | 4;
@@ -122,7 +127,43 @@ const SceneOfSmallRoom: React.FC<Props> = ({ placeId }) => {
         }
     }
 
-    return <Wrapper>{itemElms}</Wrapper>;
+    const params = {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    };
+
+    return (
+        <Wrapper>
+            <Swiper
+                {...params}
+                spaceBetween={20}
+                slidesPerView={1}
+                pagination={{ clickable: true }}
+                navigation={itemElms.length > 1}
+                loop={true}
+            >
+                {itemElms.map((itemElm, index) => {
+                    return (
+                        <SwiperSlide key={`swiperSlide${index}`}>
+                            {itemElm}
+                        </SwiperSlide>
+                    );
+                })}
+            </Swiper>
+        </Wrapper>
+    );
 };
 
 const Wrapper = styled.div`
@@ -131,9 +172,42 @@ const Wrapper = styled.div`
     flex-flow: column wrap;
     height: auto;
     width: 100%;
+    .swiper-container {
+        max-width: 1000px;
+        overflow: hidden;
+        padding-bottom: 10px;
+    }
+    .swiper-pagination {
+        bottom: 0px;
+    }
+    .swiper-pagination-bullet {
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+    .swiper-button-prev,
+    .swiper-button-next {
+        width: 48px; /* ボタンの幅 */
+        height: 48px; /* ボタンの高さ */
+        background-size: 48px 48px; /* 背景画像としてのサイズ（＝表示したい画像サイズ） */
+        margin-top: -24px; /* 縦中央配置用：ボタンの高さの半分のネガティブマージン（top:50%がすでに設定されている） */
+    }
+    /* 次ページボタンのスタイル */
+    .swiper-button-next {
+        background-image: url(${icon_17});
+        transform: scale(-1, 1); /* 左右反転 */
+    }
+    /* 前ページボタンのスタイル */
+    .swiper-button-prev {
+        background-image: url(${icon_17});
+    }
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        content: "";
+    }
 `;
 
-const deskWidth = 1000;
+const deskWidth = 800;
 const deskHeight = (200 / 400) * deskWidth;
 
 const DeskWrapper = styled.div`
@@ -141,6 +215,7 @@ const DeskWrapper = styled.div`
     width: ${deskWidth}px;
     height: ${deskHeight}px;
     background: center/ ${deskWidth}px ${deskHeight}px url(${bg_05}) no-repeat;
+    margin: 0 auto;
 `;
 
 const itemSizeParams = {

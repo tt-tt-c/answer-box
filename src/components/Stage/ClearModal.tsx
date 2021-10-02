@@ -6,7 +6,7 @@ import { modalsActions } from "../../reducks/modals/actions";
 import { getStageClearModalState } from "../../reducks/modals/selectors";
 import { useSelector } from "../../reducks/store/store";
 import { Overlay } from "../Common";
-import { StageNum } from "../Common/Route";
+import { path, path2, StageNum } from "../Common/Route";
 import {
     icon_01,
     icon_02,
@@ -16,6 +16,7 @@ import {
     icon_12,
     icon_13,
     icon_14,
+    icon_16,
 } from "../../assets/img";
 import { loadingActions } from "../../reducks/loading/actions";
 import { stageActions } from "../../reducks/store/actions";
@@ -54,19 +55,33 @@ const CleaModal = () => {
                         <TextWrapper>
                             <img src={stageIcon} alt="stage" />
                         </TextWrapper>
-                        <NextButton
-                            onClick={() => {
+                        <ButtonWrapper>
+                            <ResetButton onClick={() => {
                                 dispatch(loadingActions.showLoading());
-                                dispatch(modalsActions.hideStageClearModal());
+                                dispatch(
+                                    modalsActions.hideStageClearModal()
+                                );
                                 dispatch(stageAction.releaseSelectedItem());
-                                dispatch(stageAction.updateIsCleared(true));
-                                dispatch(push(nextPath[stageId]));
+                                dispatch(stageAction.stageReset());
+                                dispatch(push(`${path[`stage${stageId}`]}/${path2.mysterySlide}`));
                                 dispatch(loadingActions.hideLoading());
-                            }}
-                        >
-                            <span>{`Next Stage`}</span>
-                            <i />
-                        </NextButton>
+                            }}></ResetButton>
+                            <NextButton
+                                onClick={() => {
+                                    dispatch(loadingActions.showLoading());
+                                    dispatch(
+                                        modalsActions.hideStageClearModal()
+                                    );
+                                    dispatch(stageAction.releaseSelectedItem());
+                                    dispatch(stageAction.updateIsCleared(true));
+                                    dispatch(push(nextPath[stageId]));
+                                    dispatch(loadingActions.hideLoading());
+                                }}
+                            >
+                                <span>{`Next Stage`}</span>
+                                <i />
+                            </NextButton>
+                        </ButtonWrapper>
                     </ModalWrapper>
                 </>
             )}
@@ -96,7 +111,7 @@ const ModalWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     z-index: 9991;
-    > div {
+    > div:first-child {
         animation: zoomIn 1s cubic-bezier(0.25, 1, 0.5, 1) 1 forwards;
     }
     @keyframes zoomIn {
@@ -128,6 +143,51 @@ const TextWrapper = styled.div`
     }
 `;
 
+const ButtonWrapper = styled.div`
+margin-top: 50px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: stretch;
+    animation: show 2s ease 0.5s 1 alternate forwards running;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+
+    @keyframes show {
+        0% {
+            opacity: 0;
+            visibility: hidden;
+        }
+        100% {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+`;
+
+const ResetButton = styled.button`
+    box-sizing: border-box;
+    width: 70px;
+    height: 70px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-right: 50px;
+    cursor: pointer;
+    color: #FF0000;
+    outline: 0;
+    border: 0;
+    padding: 0;
+    border-radius: 50%;
+    background: center/70px 70px url(${icon_16}) #000 no-repeat;
+    transition: all 0.3s;
+
+    :hover {
+        transform: rotate(-60deg);
+    }
+`;
+
 const NextButton = styled.button`
     overflow: hidden;
     padding: 1.5rem 6rem;
@@ -156,11 +216,7 @@ const NextButton = styled.button`
     outline: 0;
     border: 1px solid #fff;
     color: #fff;
-    min-width: 400px;
-    margin-top: 50px;
-    animation: show 2s ease 1s 1 alternate forwards running;
-    opacity: 0;
-    visibility: hidden;
+    min-width: 300px;
 
     span {
         position: relative;
@@ -211,16 +267,5 @@ const NextButton = styled.button`
     }
     :hover i:before {
         background-image: url(${icon_01});
-    }
-
-    @keyframes show {
-        0% {
-            opacity: 0;
-            visibility: hidden;
-        }
-        100% {
-            opacity: 1;
-            visibility: visible;
-        }
     }
 `;
