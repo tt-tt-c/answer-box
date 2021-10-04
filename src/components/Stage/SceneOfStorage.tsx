@@ -204,7 +204,7 @@ const Wrapper = styled.div`
 `;
 
 const deskWidth = 1000;
-const deskHeight = 380;
+const deskHeight = 360;
 
 const DeskWrapper = styled.div`
     position: relative;

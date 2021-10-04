@@ -95,7 +95,8 @@ export const fetchMysterySlide = async (
     };
 };
 
-export const getBlobUrl = (blob: Blob) => {    
+export const getBlobUrl = (blob: Blob) => {
+    if(blob === null) return "";    
     return URL.createObjectURL(blob);
 };
 

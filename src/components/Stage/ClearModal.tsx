@@ -43,7 +43,7 @@ const CleaModal = () => {
         2: "/stage/3",
         3: "/stage/4",
         4: "/stage/5",
-        5: "/clear",
+        5: "/stage/clear",
     };
 
     return (

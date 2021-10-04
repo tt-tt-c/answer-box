@@ -3,12 +3,11 @@ import headerLogoImg from './header_logo.png'
 
 //bg
 import bg_img_01 from './bg_img_01.png'
-import bg_img_02 from './bg_img_02.png'
-import bg_img_03 from './bg_img_03.png'
-import bg_img_04 from './bg_img_04.png'
-import bg_img_05 from './bg_img_05.png'
-import bg_img_06 from './bg_img_06.png'
-import bg_img_07 from './bg_img_07.png'
+import bg_img_02 from './bg_img_02.webp'
+import bg_img_03 from './bg_img_03.webp'
+import bg_img_04 from './bg_img_04.webp'
+import bg_img_05 from './bg_img_05.webp'
+import bg_img_06 from './bg_img_06.webp'
 
 //icon
 import icon_img_01 from './icon_01.png'
@@ -16,10 +15,10 @@ import icon_img_02 from './icon_02.png'
 import icon_img_03 from './icon_03.png'
 import icon_img_04 from './icon_04.png'
 import icon_img_05 from './icon_05.png'
-import icon_img_06 from './icon_06.png'
+import icon_img_06 from './icon_06.webp'
 import icon_img_07 from './icon_07.png'
-import icon_img_08 from './icon_08.png'
-import icon_img_09 from './icon_09.png'
+import icon_img_08 from './icon_08.webp'
+import icon_img_09 from './icon_09.webp'
 import icon_img_10 from './icon_10.png'
 import icon_img_11 from './icon_11.png'
 import icon_img_12 from './icon_12.png'
@@ -30,10 +29,10 @@ import icon_img_16 from './icon_16.png'
 import icon_img_17 from './icon_17.png'
 
 //anserBox
-import answerBox_img_A from './answer-box_01.png'
-import answerBox_img_B from './answer-box_02.png'
-import answerBox_img_O from './answer-box_03.png'
-import answerBox_img_X from './answer-box_04.png'
+import answerBox_img_A from './answer-box_01.webp'
+import answerBox_img_B from './answer-box_02.webp'
+import answerBox_img_O from './answer-box_03.webp'
+import answerBox_img_X from './answer-box_04.webp'
 
 
 //headerLogo
@@ -46,7 +45,7 @@ export const bg_03 = bg_img_03;
 export const bg_04 = bg_img_04;
 export const bg_05 = bg_img_05;
 export const bg_06 = bg_img_06;
-export const bg_07 = bg_img_07;
+
 
 //icon
 export const icon_01 = icon_img_01;

@@ -9,7 +9,7 @@ import {
     answerBox_O,
     answerBox_X,
     bg_06,
-    bg_07,
+    bg_03,
     icon_05,
     icon_06,
     icon_15,
@@ -209,7 +209,7 @@ const SceneOfAnswerBox: React.FC<Props> = ({
                             </AnswerBoxButtonWrapper>
                         )}
 
-                        <AnswerBoxImg size={answerBoxImgParams.s} src={bg_07} />
+                        <AnswerBoxImg size={answerBoxImgParams.s} src={bg_03} />
                     </AnswerBoxWrapper>
                 )}
                 <AnswerBoxWrapper isAvailable={availableBox.b}>
